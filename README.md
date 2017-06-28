@@ -25,4 +25,4 @@
           - DEBUG=myapp:* npm start
           - check http://localhost:3000
   
-  
+4. npm install mongoose --save (nodejs mongoDB driver)  
