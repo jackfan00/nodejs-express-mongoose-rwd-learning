@@ -1,9 +1,11 @@
 # nodejs-express-mongoose-rwd-learning
+
 1. enviroment: CentOS 6.8
+
 2. download necessary tools:
-  - nodejs: https://nodejs.org/, 
-      a. extract tar file , then edit ~/.bashrc , add  "export PATH=$PATH:<nodejs-extract-directory>/bin"
-      b. source ~/.bashrc
+          - nodejs: https://nodejs.org/, 
+              a. extract tar file , then edit ~/.bashrc , add  "export PATH=$PATH:<nodejs-extract-directory>/bin"
+              b. source ~/.bashrc
       
   - mongoDB: https://www.mongodb.com/download-center#community, select "RHEL6 linux 64-bit", 
       a. extract tar file, then edit ~/.bashrc , add  "export PATH=$PATH:<mongodb-extract-directory>/bin"
