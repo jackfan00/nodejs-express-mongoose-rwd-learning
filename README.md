@@ -3,6 +3,7 @@
 1. enviroment: CentOS 6.8
 
 2. download necessary tools:
+
           - nodejs: https://nodejs.org/, 
               a. extract tar file , then edit ~/.bashrc , add  "export PATH=$PATH:<nodejs-extract-directory>/bin"
               b. source ~/.bashrc
