@@ -1,0 +1,28 @@
+extends ./layout
+block content
+	div.w3-example(class="center")
+		
+		form(class="form-horizontal" action="/author/authorsignup2nd" method="post")
+			input(type="hidden" name="userid" value=userid)
+			div(class="form-group underline")
+				h3 請先註冊作家資料
+			div(class="form-group underline")
+				label(class="control-label col-sm-2") 筆名:
+				div(class="col-sm-10")
+					input(type="text" name="penname" class="form-control" id="penname" required="required" value=formbody ? formbody.penname : "" )
+			div(class="form-group underline")
+				label(class="control-label col-sm-2") 作家密碼:
+				div(class="col-sm-10")
+					input(type="password" name="authorpassword" title="長度至少6個字元，由英文與數字組成，首字不可為數字" required="required" class="form-control" placeholder="輸入密碼")
+			div(class="form-group underline")
+				label(class="control-label col-sm-2") 確認作家密碼:
+				div(class="col-sm-10")
+					input(type="password" name="confirm_authorpassword" title="請重複輸入上面的密碼" required="required" class="form-control" placeholder="輸入密碼")
+			div(class="form-group jumbotron")
+				div(class="textcenter")
+					button(type="submit" class="center btn btn-default") 確定註冊
+
+			- if (message) {
+			div(id="message")
+				div(class="alert alert-danger text-center") #{message}
+			- }	

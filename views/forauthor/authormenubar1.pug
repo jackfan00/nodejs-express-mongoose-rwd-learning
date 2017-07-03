@@ -1,0 +1,33 @@
+
+div(class="container-fluid")
+	div(style="display: table;width: 100%; padding-top:15px;padding-bottom:15px")
+		a.btn.btn-default(href="/" style="margin-right:10px") 回首頁
+		a.btn.btn-danger(href="/author/" style="margin-right:10px") 作家首頁
+		- if (authorlogined) {	
+		a.btn.btn-default(href="/author/bookmanager" style="margin-right:10px") 作品管理			
+		a.btn.btn-default(href="/author/createnewbook" style="margin-right:10px") 建新作品
+		- }	
+		// li
+			a(href="/author/msg")
+				span.glyphicon.glyphicon-bell
+					cite.sprite.bell(style="display: none;")
+				span.spacing 通知
+						
+		- if (user) {
+		a.btn.btn-default(href="/author/signout" style="margin-right:10px") 會員登出
+		// li.dropdown
+			a.dropdown-toggle(href="#" data-toggle="dropdown")
+				span.glyphicon.glyphicon-user
+				span.spacing #{user.penname}
+				span.caret
+			ul.dropdown-menu
+				li
+					a(href="/users/profile") 會員中心
+					a(href="/users/chguserpasswd") 修改會員密碼
+					a(href="/author/chgauthorpasswd") 修改作家密碼
+		- }
+		- else {
+		a.btn.btn-default(href="/author/authorsignup") 作家註冊
+			span.glyphicon.glyphicon-log-in
+		- }	
+

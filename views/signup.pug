@@ -1,0 +1,63 @@
+extends ./layout
+block content
+	div.w3-example(class="center")
+		
+		form(class="form-horizontal" action="/signup" method="post")
+			div(class="form-group underline")
+				h3 請填寫會員資料
+			div(class="form-group underline")
+				label(class="control-label col-sm-2" for="username") 帳號:
+				div(class="col-sm-10")
+					input(type="text" name="username" class="form-control" id="username" required="required" value=formbody ? formbody.username : "" )
+			div(class="form-group underline")
+				label(class="control-label col-sm-2" for="username") 顯示名稱:
+				div(class="col-sm-10")
+					input(type="text" name="displayname" class="form-control" id="displayname" required="required" value=formbody ? formbody.displayname : "" )
+
+			div(class="form-group underline")
+				label(class="control-label col-sm-2" for="pwd") 密碼:
+				div(class="col-sm-10")
+					input(type="password" name="password" title="長度至少6個字元，由英文與數字組成，首字不可為數字" required="required" class="form-control" id="pwd" placeholder="輸入密碼")
+			div(class="form-group underline")
+				label(class="control-label col-sm-2" for="pwd1") 確認密碼:
+				div(class="col-sm-10")
+					input(type="password" name="confirm_password" title="請重複輸入上面的密碼" required="required" class="form-control" id="pwd1" placeholder="輸入密碼")
+			div(class="form-group underline")
+				label(class="control-label col-sm-2" for="email") 電子信箱:
+				div(class="col-sm-10")
+					input(type="email" name="email" class="form-control" id="email" title="請盡量不要使用免費信箱，以免收不到相關通知信" required="required" value=formbody ? formbody.email : "")
+			div(class="form-group underline")
+				label(class="control-label col-sm-2" for="birthday") 生日:
+				div(class="col-sm-10")
+					select(class="inline spacing" name="birth_year" )
+						- for (var i = 1940; i < 2017; ++i) {
+						option(value= i selected= (formbody && (formbody.birth_year==i)) ? true : false )= i
+						- }
+					label(class="inline") 年
+                            
+					select(class="inline spacing" name="birth_mon")
+						- for (var i = 1; i < 13; ++i) {                                    
+						option(value= i selected= (formbody && (formbody.birth_mon==i)) ? true : false)= i
+						- }
+					label(class="inline") 月
+                                
+					select(class="inline spacing" name="birth_day" title="請正確填寫您的生日，日後活動時身分認證所需，不會顯示在前台網站。")
+						- for (var i = 1; i < 32; ++i) {                                    
+						option(value= i selected= (formbody && (formbody.birth_day==i)) ? true : false)= i
+						- }
+					label(class="inline") 日
+			div(class="form-group underline")
+				label(class="control-label col-sm-2" ) 性別:
+				div(class="col-sm-10")
+					input(class="inline spacing" name="gender" type="radio" value="1" checked= (formbody && (formbody.gender==0)) ? false : true) 
+					label(class="inline spacing") 男　
+					input(class="inline spacing" name="gender" type="radio" value="0" checked= (formbody && (formbody.gender==0)) ? true : false) 
+					label(class="inline spacing") 女
+			div(class="form-group jumbotron")
+				div(class="textcenter")
+					button(type="submit" class="center-block btn btn-default") 確定註冊
+
+			- if (message) {
+			div(id="message")
+				div(class="alert alert-danger text-center") #{message}
+			- }	
