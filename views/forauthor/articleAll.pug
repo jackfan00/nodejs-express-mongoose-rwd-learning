@@ -1,0 +1,11 @@
+extends ./layout
+block content
+	div.w3-example
+		h1 #{book.name}
+		include ./maintab
+		- if (mode == "bookinfo") {
+			include ./bookinfo
+		- }
+		- else {
+			include ./article
+		- }

@@ -1,0 +1,127 @@
+
+form(name="articleForm" method="post" action="/author/savenewarticle/"+mode onsubmit="return validatearticleForm()")
+	- if (article) {
+	input(type="hidden" name="editarticle" value=article._id)
+	- }
+	input(type="hidden" name="book_id" value=book._id)
+	nav.navbar.navbar-default
+		div.container-fluid
+			ul.nav.navbar-nav
+				li
+					a
+						select(name="booknumber" disabled= (article) ? false : false)
+							- for (var x = 1; x < 20; x++) {
+								option(value= x selected= (article && (article.booknumber===x)) ? true : false )= '第' + x + '冊'			
+							- }							
+				li
+					a
+						select(name="chapternumber" disabled= (article) ? false : false)
+							- for (var x = 1; x < 100; x++) {
+								option(value= x selected= (article && (article.chapternumber===x)) ? true : false)= '第' + x + '章'	
+							- }				
+			ul.nav.navbar-nav
+				- if (mode == "writing") {
+				li
+					a
+						button(type="submit" class="btn btn-primary") 保存
+
+				li
+					// a(href="/articles/delete" class="btn btn-default") 刪除
+					a#dela(onclick= article ? "deletearticle('"+book._id+"','"+article._id+"','"+article.chaptername+"')" : "") 
+						button#delb(type="button" class="btn btn-danger" disabled= article ? false : true) 刪除
+				- }		
+			ul.nav.navbar-nav.navbar-right
+				- if (mode == "deleted") {
+				li
+					a(href= article ? "/author/recoverarticle/"+article._id+"/"+book._id : "")
+						button(type="button" class="btn btn-success" disabled= article ? false : true) 恢復為草稿
+				li
+					a#dela(onclick= article ? "deletedeleteedarticle('"+book._id+"','"+article._id+"','"+article.chaptername+"')" : "" ) 
+						button#delb(type="button" class="btn btn-danger" disabled= article ? false : true) 徹底刪除
+				- }
+				- else if (mode == "published") {
+				li
+					a
+						button(type="submit" class="btn btn-primary" disabled= article ? false : true) 保存修改
+				li
+					a#dela(onclick= article ? "deletepublishedarticle('"+book._id+"','"+article._id+"','"+article.chaptername+"')" : "") 
+						button#delb(type="button" class="btn btn-danger" disabled= article ? false : true) 刪除
+				- }
+				- else {
+				li
+					a(onclick="writenewarticle()")
+						button(type="button" class="btn btn-primary") 寫新章節
+				li
+					a(onclick= article ? "publisharticle('"+book._id+"','"+article._id+"','"+article.chapterbooknumber+"','"+article.chapternumber+"')" : "")
+						button(type="button" class="btn btn-success" disabled= article ? false : true) 發布單章
+				li
+					a(onclick="publisharticles('"+book._id+"')")
+						button(type="button" class="btn btn-success") 全部發布
+				- }		
+						
+	div(style="overflow: hidden;")
+		div.list-group.inline(style="width: 25%;float: left; overflow-y: auto; height:522px;")
+			- if (book.articles.length > 0){
+			- var wordcount = 0, chapcount =0;
+			- for (var x = 1; x <= book.articles.length; x++) {
+			- 	if ((mode == "writing" && book.articles[x-1].mode =="writing") || (mode == "published" && book.articles[x-1].mode =="published") || (mode == "deleted" && book.articles[x-1].mode =="deleted") ) {
+			-		wordcount += book.articles[x-1].wordcount;
+			-		chapcount++;
+			-	}
+			- }
+			a.list-group-item 共#{chapcount}章  #{wordcount}字
+			
+			- for (var x = 1; x <= book.articles.length; x++) {
+				- if ((mode == "writing" && book.articles[x-1].mode =="writing") || (mode == "published" && book.articles[x-1].mode =="published") || (mode == "deleted" && book.articles[x-1].mode =="deleted") ) {
+			
+				- if (article && (article.chapternumber==book.articles[x-1].chapternumber)) {
+				a.list-group-item.list-group-item-danger(href="/author/editarticle/"+mode+"/"+book.articles[x-1]._id )
+					div
+						p
+						label 第 #{book.articles[x-1].chapternumber} 章  #{book.articles[x-1].chaptername}
+						p
+						div
+							span.inline 共#{book.articles[x-1].wordcount}字
+						
+						div
+							p.inline.pull-right #{book.articles[x-1].date}
+						p
+				- }
+				- else {
+				a.list-group-item(href="/author/editarticle/"+mode+"/"+book.articles[x-1]._id)
+					div
+						p
+						label 第 #{book.articles[x-1].chapternumber} 章  #{book.articles[x-1].chaptername}
+						p
+						div
+							span.inline 共#{book.articles[x-1].wordcount}字
+						
+						div
+							p.inline.pull-right #{book.articles[x-1].date}
+						p
+				- }
+				- }
+			- }
+			- }
+			- else {
+				a.list-group-item 共0章
+		
+			
+						
+			- }
+				
+		div.list-group.inline(style="width: 75%;float: right;")
+			input#chaptername-wordcount.form-control(name="chaptername" type="text" required="required" style="height: 80px;" disabled= mode=="deleted" ? true : false value= article ? article.chaptername : "")
+			textarea#textarea-wordcount.form-control(name="content" type="text" rows="20" required="required" disabled= mode=="deleted" ? true : false)= content ? content : ""
+			label.pull-right 字
+			label#span_wordcount.pull-right.spacing= article ? article.wordcount : 0
+			label.pull-right 內容:
+			h1.pull-right.spacing
+			label.pull-right 字
+			label#span_wordcount1.pull-right.spacing= article ? article.chaptername.replace(/\s/g, "").length : 0
+			label.pull-right 標題:
+			label 要求字數:標題>2, 內容>1000
+
+				
+					
+

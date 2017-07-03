@@ -1,0 +1,28 @@
+extends layout
+
+block content
+
+	div.bg-primary.container-fluid(style="padding-top:10px;padding-bottom:10px;")
+		div(style="display: table;width: 100%;padding-top:15px;padding-bottom:15px")
+			div.col-xs-3(style="float: none;display: table-cell;vertical-align: middle;")
+				a(href="/read/"+bookid)
+					button 返回
+			div.col-xs-6.text-center(style="float: none;display: table-cell;vertical-align: middle;") #{bookname}
+				 
+			div.col-xs-3(style="float: none;display: table-cell;vertical-align: middle;")
+				a(href="/")
+					button.pull-right 首頁
+
+	div.container-fluid(style="padding-top:10px;padding-bottom:10px;background-color:#eee")
+		div(style="display: table;width: 100%;padding-top:15px;padding-bottom:15px")
+			h4(style="display: inline;") 調整字體大小
+			a(style="margin-right:30px;")
+				button(style="padding-left:15px;padding-right:15px;margin-left:30px;" onclick="fontsizeup()") +
+			a
+				button(style="padding-left:15px;padding-right:15px;" onclick="fontsizedown()") -
+				 
+
+	div.container-fluid(style="padding:10px;")
+		h3.text-center
+			b #{chname} 
+		p#content(style="white-space: pre-wrap;font-size: 15px;") #{content}

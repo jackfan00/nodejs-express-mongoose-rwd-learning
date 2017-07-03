@@ -3,16 +3,20 @@ var Schema = mongoose.Schema;
 var UserSchema = new Schema(
   {
     displayname:      { type: String },
-    login:     { type: String, require: true },
-    passwd:    { type: String, require: true },
+	headimg:     { type: String, default: "/images/user_photo_default.png" },
+    username:     { type: String, require: true },
+    password:    { type: String, require: true },
     email:     { type: String },
-    age:       { type: Number },
+    birth_year:       { type: Number },
+    birth_mon:       { type: Number },
+    birth_day:       { type: Number },
+	gender:       { type: Number },
     books:     [{ type: Schema.ObjectId, ref: 'Book' }],
     booksreadstatus: [{ type: Number }],
     coins:     { type: Number, default: 5000 },
     tickets:   { type: Number, default: 10 },
     viewhistory: [{ type: Schema.ObjectId, ref: 'Book' }],
-    author:    { type: Schema.ObjectId, ref: 'Author', default: 0 },
+    author:    { type: Schema.ObjectId, ref: 'Author' },
     create_at: { type: Date, default: Date.now }
 
   }

@@ -1,0 +1,37 @@
+ul.nav.nav-tabs
+	- if (mode == "bookinfo") {
+	li.active
+		a(href="/author/editbook/"+book._id) 作品資訊
+	- }	
+	- else {
+	li
+		a(href="/author/editbook/"+book._id) 作品資訊
+	- }
+
+	- if (mode == "writing") {
+	li.active
+		a(href="/author/article/writing/"+book._id+"/1") 草稿區
+	- }
+	- else {
+	li
+		a(href="/author/article/writing/"+book._id+"/1") 草稿區
+	- }
+
+	- if (mode == "published") {
+	li.active
+		a(href="/author/article/published/"+book._id+"/1") 已發布章節
+	- }	
+	- else {
+	li
+		a(href="/author/article/published/"+book._id+"/1") 已發布章節
+	- }
+
+	- if (mode == "deleted") {
+	li.active
+		a(href="/author/article/deleted/"+book._id+"/1") 刪除章節回收區
+	- }
+	- else {
+	li
+		a(href="/author/article/deleted/"+book._id+"/1") 刪除章節回收區
+	- }
+	

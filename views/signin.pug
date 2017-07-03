@@ -1,0 +1,26 @@
+extends ./layout
+block content
+	div(class="center")
+		div(class="well")
+			h3 會員登入
+			form(class="form" action="/signin" method="post")
+				div(class="spacing")
+					label(class="spacing") 帳號
+					div(class="spacing")
+						input(type="text" name="username" class="form-control" title="請輸入你的帳號" required="required" value=formbody ? formbody.username : "")
+				div(class="spacing")
+					label(class="spacing") 密碼
+					div(class="spacing")
+						input(type="password" name="password" class="form-control" title="請輸入你的密碼" required="required" )
+				div(class="form-group spacing")
+					button(type="submit" class="btn btn-default inline spacing") 登入
+					input(class="inline spacing" type="checkbox" checked="checked" value="1" name="rememberme") 
+					label(class="inline spacing") 自動記住帳號
+			div
+				a(class="inline spacing" href="/forgot") 忘記密碼
+				label(class="inline spacing") |
+				a(class="inline spacing" href="/signup") 馬上註冊
+		if (message) 
+			div(id="message")
+				div(class="alert alert-danger text-center") #{message}
+			

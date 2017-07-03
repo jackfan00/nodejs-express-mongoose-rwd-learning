@@ -1,0 +1,43 @@
+extends ../authors/layout
+
+block content
+	div.w3-example
+		h1 #{book.name}
+		div.w3-padding.w3-white.notranslate
+
+			form.form-horizontal(action="/books/editbook" method="post")
+				input.form-control(type="hidden" name="bookid"  value="#{book._id}")
+				div.form-group
+					label.control-label.col-sm-2 書號:
+					div.col-sm-10
+						label.control-label.col-sm-2 #{book.booknumber}
+				div.form-group
+					label.control-label.col-sm-2 文章:
+					div.col-sm-10
+						label.control-label.col-sm-2.inline 共#{book.articles.length}篇文章, 
+						label.control-label.inline #{wordcount}字
+				div.form-group
+					label.control-label.col-sm-2 書名:
+					div.col-sm-10
+						input.form-control(type="text" name="name" required="required" value="#{book.name}" disabled)
+				div.form-group
+					label.control-label.col-sm-2 類型:
+					div.col-sm-10
+						select(name="category")
+							each item in cats
+								option(value= item selected= (book && (book.category===item)) ? true : false )= item						
+						// input.form-control(type="text" name="category" required="required")
+				div.form-group
+					label.control-label.col-sm-2 簡介:
+					div.col-sm-10
+						textarea#description.form-control(rows="10" name="description" required="required") #{book.description}
+				div.form-group
+					div.col-sm-offset-2.col-sm-10
+						button.btn.btn-default(type="submit") 修改作品
+						label.pull-right 字
+						- var des_wordcount = book.description.replace(/\s/g, "").length;
+						span#span_wordcount.pull-right #{des_wordcount}
+						label.pull-right 共
+		h1			
+							
+		

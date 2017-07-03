@@ -1,0 +1,55 @@
+doctype html
+html
+	head
+		meta(charset="utf-8")
+		meta(name="viewport" content="width=device-width, initial-scale=1")
+		title= title
+		link(rel='stylesheet', href='/stylesheets/style.css')
+		// bootstrap
+		link(rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css")
+		script(src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js")
+		script(src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js")
+		script(src="/javascripts/utils.js")
+
+	body
+		nav(class="navbar navbar-default")
+			div(class="container-fluid")
+				ul(class="nav navbar-nav")
+					li
+						a(href="/") 回首頁
+					li
+						a(href="/author") 作家專區
+					- if (authorlogined) {	
+					li
+						a(href="/author/bookmanager") 作品管理			
+					li
+						a(href="/author/createnewbook") 創建新作品
+					- }	
+				ul(class="nav navbar-nav navbar-right")
+					// li
+						a(href="/author/msg")
+							span.glyphicon.glyphicon-bell
+								cite.sprite.bell(style="display: none;")
+							span.spacing 通知
+							
+					- if (user) {
+					li
+						a(href="/author/signout") 會員登出
+					li.dropdown
+						a.dropdown-toggle(href="#" data-toggle="dropdown")
+							span.glyphicon.glyphicon-user
+							span.spacing #{user.penname}
+							span.caret
+						ul.dropdown-menu
+							li
+								a(href="/users/profile") 會員中心
+								a(href="/users/chguserpasswd") 修改會員密碼
+								a(href="/author/chgauthorpasswd") 修改作家密碼
+					- }
+					- else {
+					li
+						a(href="/author/authorsignup") 作家註冊
+							span.glyphicon.glyphicon-log-in
+					- }	
+					
+		block content

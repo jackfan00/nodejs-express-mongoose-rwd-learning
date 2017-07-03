@@ -1,0 +1,36 @@
+extends layout
+
+block content
+	div.w3-example
+		h1
+		div.w3-padding.w3-white.notranslate(style="overflow-y: auto; height:680px;")
+			table.table.table-hover
+				thead
+					tr
+						th 書名						
+						th 最新章節						
+						th 分類						
+						th 收藏						
+						th 操作
+										
+				tbody
+				each book in books
+					tr
+						td(style="vertical-align: middle;")
+							div.list-group
+								a.list-group-item
+									img(src= book.coverimg style="width:100px;")
+								a.list-group-item #{book.name}
+						td(style="vertical-align: middle;") 無最新章節
+						td(style="vertical-align: middle;")= cats[book.category]
+						td(style="vertical-align: middle;")= book.collectusers.length
+						td(style="vertical-align: middle;")
+							div.list-group
+								a.list-group-item(href="/author/article/writing/" + book._id+"/1" ) 撰寫新章節
+								a.list-group-item(href="/author/article/published/" + book._id+"/1" ) 已發布章節
+								a.list-group-item(href="/author/editbook/" + book._id ) 修改作品資訊
+								a.list-group-item.list-group-item-danger(href="#" onclick="deletebook('/author/deletebook/"+book._id+"', '"+book.name+"')") 刪除作品
+									
+		h1
+							
+		

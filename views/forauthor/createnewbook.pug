@@ -1,0 +1,30 @@
+extends layout
+
+block content
+	div.w3-example
+		h1 新書資料設定
+		div.w3-padding.w3-white.notranslate
+
+			form.form-horizontal(action="/author/createnewbook" method="post")
+				div.form-group
+					label.control-label.col-sm-2 書名:
+					div.col-sm-10
+						input.form-control(type="text" name="name" required="required")
+				div.form-group
+					label.control-label.col-sm-2 類型:
+					div.col-sm-10
+						select(name="category")
+							- for (var i=0; i< cats.length; i++){
+								option(value= i)= cats[i]
+							- }
+						// input.form-control(type="text" name="category" required="required")
+				div.form-group
+					label.control-label.col-sm-2 簡介:
+					div.col-sm-10
+						textarea#description.form-control(rows="5" name="description" required="required")
+				div.form-group
+					div.col-sm-offset-2.col-sm-10
+						button.btn.btn-default(type="submit") 作品設置完成
+		h1
+							
+		

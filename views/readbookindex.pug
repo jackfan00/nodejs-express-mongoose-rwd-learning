@@ -1,0 +1,45 @@
+extends layout
+
+block content
+	include ./menubar1
+	include ./menubar2
+	- var bookcoverimg = book.coverimg;
+	- var bookname = book.name;
+	- var authorname = book.authorID.penname;
+	- var category = cats[book.category];
+	- var bookstatus = book.status;
+	- var publishedupdate_at = book.publishedupdate_at;
+	- var newestchapter = newestchapter;
+	- var bookdes = book.des;
+	- var comments = book.comments;
+	div.container-fluid
+		div.row(style="display: table;")
+			div.col-xs-3(style="float: none;display: table-cell;vertical-align: middle;")
+				img.img-responsive(src= bookcoverimg)
+			div.col-xs-9(style="float: none;display: table-cell;vertical-align: middle;")
+				h4 #{bookname}
+					span.badge.pull-right(style="margin-right:10px;") #{category}
+					span.badge.pull-right(style="margin-right:10px;") #{bookstatus}
+					// small 分類:#{category}
+					// small 狀態:#{bookstatus}
+				h4 作者:#{authorname}
+				h6 更新:#{publishedupdate_at}
+				h6 最新:#{newestchapter}
+		div(style="display: table;width: 100%; padding-top:10px; padding-bottom:10px;")
+			div.col-xs-6(style="float: none;display: table-cell;vertical-align: middle;")
+				a(href="/readarticle/"+book._id+"/0")
+					button(style="width: 100%;") 開始閱讀
+			div.col-xs-6(style="float: none;display: table-cell;vertical-align: middle;")
+				a(href="/addmybook/"+book._id)
+					button(style="width: 100%;") 加入書架
+	div.panel.panel-default
+		div.panel-heading 簡介
+		div.panel-body(style="white-space: pre-wrap;") #{bookdes}
+
+	div.panel.panel-default
+		div.panel-heading 書評
+		div.panel-body
+		// - for (var i=0;i<comments.length,i++){
+		// -	var comment = comments[i];
+		//	include ./commentlistitem
+		// - }

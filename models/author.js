@@ -2,7 +2,8 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var AuthorSchema = new Schema(
   {
-    penname:      { type: String },
+	password: { type: String, require: true },
+    penname:      { type: String, require: true },
     books:     [{ type: Schema.ObjectId, ref: 'Book' }],
     create_at: { type: Date, default: Date.now }
 

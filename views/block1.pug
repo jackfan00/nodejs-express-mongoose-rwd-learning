@@ -1,18 +1,21 @@
 div.list-group
-	div(class="list-group-item list-group-item-info") 閱讀紀錄
-		a.pull-right(href="#") 更多..
-	a.list-group-item(href="#") 都市-百練成神-作者溫
-	a.list-group-item(href="#") 都市-百練成神-作者溫
-	a.list-group-item(href="#") 都市-百練成神-作者溫
-	a.list-group-item(href="#") 都市-百練成神-作者溫
-
-div.list-group
 	div(class="list-group-item list-group-item-info") 點擊排行
 		a.pull-right(href="#") 更多..
-	a.list-group-item(href="#") 都市-百練成神-作者溫
-	a.list-group-item(href="#") 都市-百練成神-作者溫
-	a.list-group-item(href="#") 都市-百練成神-作者溫
-	a.list-group-item(href="#") 都市-百練成神-作者溫
+	// a.list-group-item(href="#")
+	- for (var i=0;i<allclicks_books.length; i++){
+	- 	var category = cats[allclicks_books[i].category];
+	- 	var bookname = allclicks_books[i].name;
+	- 	var authorname = allclicks_books[i].authorID.penname;
+	- 	var allclicks = allclicks_books[i].allclicks;
+	- 	var bookcoverimg = allclicks_books[i].coverimg;
+	- 	var bookstatus = allclicks_books[i].status;
+	- 	var bookwordcount = allclicks_books[i].bookwordcount;
+	- 	var bookdes = allclicks_books[i].des;
+	- 	var bookid = allclicks_books[i]._id;
+	-	var id = i;
+		include booklistitem
+	- }
+
 
 div.list-group
 	div(class="list-group-item list-group-item-info") 推薦排行

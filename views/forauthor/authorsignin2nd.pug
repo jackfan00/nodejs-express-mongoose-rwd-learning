@@ -1,0 +1,22 @@
+extends ./layout
+block content
+	div(class="center")
+		div(class="well")
+			h3 作家登入
+			form(class="form" action="/author/authorsignin2nd" method="post")
+				// div(class="spacing")
+					label(class="spacing") 帳號
+					div(class="spacing")
+						input(type="text" name="username" class="form-control" title="請輸入你的帳號" required="required" value=formbody ? formbody.username : "")
+				div(class="spacing")
+					label(class="spacing") 密碼
+					div(class="spacing")
+						input(type="password" name="password" class="form-control" title="請輸入你的密碼" required="required" )
+				div(class="form-group spacing")
+					button(type="submit" class="btn btn-default inline spacing") 登入
+			div
+				a(class="inline spacing" href="/author/authorforgot") 忘記密碼
+		if (message) 
+			div(id="message")
+				div(class="alert alert-danger text-center") #{message}
+			
