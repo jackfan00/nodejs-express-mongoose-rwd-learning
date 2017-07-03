@@ -35,6 +35,10 @@ router.get('/signin', function(req, res, next) {
 	res.render('signin');
 });
 
+router.get('/signup', function(req, res, next) {
+	res.render('signup');
+});
+
 router.get('/signout', function(req, res, next) {
 	req.session.user = null;
 	res.redirect('/');
@@ -49,15 +53,16 @@ router.get('/read/:bookid', function(req, res, next) {
 			res.send(err);
 		}
 		else{
-			console.log("read book:"+book);
+			
 			var articles = book.articles;
-			chstr = "第 "+articles[articles.length-1].chapternumber+" 章  "+articles[articles.length-1].chaptername;
-			newestchapter = articles.length >0 ? chstr : "無章節";
-			if (req.sesssion && req.sesssion.user){
-				res.render('readbookindex', { book: book, user: req.sesssion.user, cats: cats, newestchapter: newestchapter});
+			var chstr = "第 "+articles[articles.length-1].chapternumber+" 章  "+articles[articles.length-1].chaptername;
+			var ntcp = articles.length >0 ? chstr : "無章節";
+			console.log("read book ntcp:"+ntcp);
+			if (req.session && req.session.user){
+				res.render('readbookindex', { book: book, user: req.session.user, cats: cats, ntcp: ntcp});
 			}
 			else{
-				res.render('readbookindex', { book: book, cats: cats, newestchapter: newestchapter});
+				res.render('readbookindex', { book: book, cats: cats, ntcp: ntcp});
 			}
 		}
 	});	
@@ -142,6 +147,78 @@ router.post('/signin', function(req, res, next) {
 			}
 
 	});
+});
+
+router.post('/signup', function(req, res, next)
+{
+	var callback_count=0;
+	
+	var saveuser = function(){
+				var newUser = new Usermodel();
+				newUser.username = req.body.username;
+				newUser.displayname = req.body.displayname;
+				newUser.password = bcrypt.hashSync(req.body.password);
+				newUser.email = req.body.email;
+				newUser.birth_year = req.body.birth_year;
+				newUser.birth_mon = req.body.birth_mon;
+				newUser.birth_day = req.body.birth_day;
+				newUser.gender = req.body.gender;
+				//newUser.author = auuser;
+				newUser.save(function (err, user) {
+					if (err) {
+						console.log("new user save err");
+						throw err;
+					}
+					else {
+						console.log("user saved");
+						res.redirect('/');
+					}
+				});
+				
+	};
+	var f1_callback = function(err, obj){
+		if (err){
+			res.send(err);
+		}
+		else if (obj) {
+			res.render('signup', {message: obj.username+" 已經被使用", formbody: req.body});
+		}
+		else {
+			console.log("f1callback_count="+callback_count);
+			callback_count++;
+			if (callback_count==2){
+				saveuser();
+			}
+		}
+	};
+	var f2_callback = function(err, obj){
+		if (err){
+			res.send(err);
+		}
+		else if (obj) {
+			res.render('signup', {message: obj.email+" 已經被使用", formbody: req.body});
+		}
+		else {
+			console.log("f2callback_count="+callback_count);
+			callback_count++;
+			if (callback_count==2){
+				saveuser();
+			}
+		}
+	};
+
+//	
+	if (req.body.password !== req.body.confirm_password || req.body.authorpassword !== req.body.confirm_authorpassword){
+		res.render('signup', {message: "密碼確認不相符", formbody: req.body});
+	}
+	else{
+		
+		Usermodel.findOne({ username: req.body.username}).exec(f1_callback);
+		Usermodel.findOne({ email: req.body.email}).exec(f2_callback);
+
+
+	}
+	//res.send(req.body);
 });
 
 module.exports = router;

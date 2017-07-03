@@ -8,8 +8,8 @@ block content
 	- var authorname = book.authorID.penname;
 	- var category = cats[book.category];
 	- var bookstatus = book.status;
-	- var publishedupdate_at = book.publishedupdate_at;
-	- var newestchapter = newestchapter;
+	- var publishedupdate_at = book.publishedupdate_at.getFullYear()+"/"+(book.publishedupdate_at.getMonth()+1)+"/"+book.publishedupdate_at.getDate();
+	// - var ntcp = ntcp;
 	- var bookdes = book.des;
 	- var comments = book.comments;
 	div.container-fluid
@@ -23,8 +23,10 @@ block content
 					// small 分類:#{category}
 					// small 狀態:#{bookstatus}
 				h4 作者:#{authorname}
-				h6 更新:#{publishedupdate_at}
-				h6 最新:#{newestchapter}
+				h6 更新:
+					span.text-primary(style="margin-left:10px;") #{publishedupdate_at}
+				h6 最新:
+					span.text-primary(style="margin-left:10px;") #{ntcp}
 		div(style="display: table;width: 100%; padding-top:10px; padding-bottom:10px;")
 			div.col-xs-6(style="float: none;display: table-cell;vertical-align: middle;")
 				a(href="/readarticle/"+book._id+"/0")

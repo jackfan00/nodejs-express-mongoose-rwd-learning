@@ -8,7 +8,7 @@ var ArticleContentmodel = require('../models/articlecontent.js');
 
 var updatearticleHelper = require('./updatearticleHelper.js');
 var savenewarticleHelper = require('./savenewarticleHelper.js');
-
+var authorsignup2ndHelper = require('./authorsignup2ndHelper.js');
 
 var bcrypt = require('bcrypt-nodejs');
 var cats=["玄幻","奇幻","武俠","仙俠","都市","歷史","科幻","靈異","遊戲","運動","女生網"];
@@ -44,7 +44,12 @@ router.get('/', function(req, res, next) {
 		
 	}
 	else if (req.session.user){
-		res.render('forauthor/authorsignin2nd');
+		if (req.session.user.author){
+			res.redirect('/author/authorsignin2nd');
+		}
+		else{
+			res.redirect('/author/authorsignup2nd');
+		}
 	}
 	else {
 		console.log("debug kkkkkkkk");
@@ -64,6 +69,14 @@ router.get('/authorsignin', function(req, res, next) {
 
 router.get('/authorsignup', function(req, res, next) {
 	res.render('forauthor/authorsignup');
+});
+
+router.get('/authorsignin2nd', function(req, res, next) {
+	res.render('forauthor/authorsignin2nd');
+});
+
+router.get('/authorsignup2nd', function(req, res, next) {
+	res.render('forauthor/authorsignup2nd', {userid: req.session.user._id});
 });
 
 router.get('/authorprofile', function(req, res, next) {
@@ -397,6 +410,7 @@ router.post('/authorsignup', function(req, res, next)
 				console.log("author saved");
 				var newUser = new Usermodel();
 				newUser.username = req.body.username;
+				newUser.displayname = req.body.displayname;
 				newUser.password = bcrypt.hashSync(req.body.password);
 				newUser.email = req.body.email;
 				newUser.birth_year = req.body.birth_year;
@@ -521,38 +535,15 @@ router.post('/authorsignup2nd', function(req, res, next){
 		res.render('forauthor/index', {user: req.session.user, message: "密碼確認不相符", formbody: req.body});
 	}
 	else{
+		authorsignup2ndHelper(req, function(err){
+			if (err){
+				res.send(err);
+			}
+			else{
+				res.redirect('/author');
+			}
+		});
 
-		var newAuthor = new Authormodel();
-		newAuthor.penname = req.body.penname;
-		newAuthor.password = bcrypt.hashSync(req.body.authorpassword);
-		newAuthor.save(function (err, auuser) {
-			if (err) {
-				console.log("new auuser save err");
-				throw err;
-			}
-			else if (auuser){
-				console.log("author saved");
-				Usermodel.update({ _id: req.body.userid }, 
-						
-					{ $set: { author: auuser._id}}, 
-					
-					function(err, raw){
-						if (err){
-							console.log("authorsignupe err");
-							res.send(err);
-						}
-						else if (raw){
-							console.log("authorsignup success");
-							//req.session.authorlogined = true;
-							res.redirect('/author');
-						}
-						else{
-							console.log("code err: authorsignup");
-							res.render('forauthor/index', {user: req.session.user, message: "此會員註冊作家失敗,請重新註冊", formbody: req.body});
-						}
-					})
-			}
-		});		
 	}
 });
 
