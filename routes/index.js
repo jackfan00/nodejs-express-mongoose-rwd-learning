@@ -3,6 +3,7 @@ var router = express.Router();
 var bcrypt = require('bcrypt-nodejs');
 var bookclickHelper = require('./bookclickHelper.js');
 var recommendvoteHelper = require('./recommendvoteHelper.js');
+var viewhistoryupdateHelper = require('./viewhistoryupdateHelper.js');
 //
 var Bookmodel = require('../models/book.js');
 var Usermodel = require('../models/user.js');
@@ -58,14 +59,20 @@ router.get('/read/:bookid', function(req, res, next) {
 		else{
 			
 			var articles = book.articles;
-			var latestchapter=0;
+			var latestchapter=-1;
 			for (var i=0; i<articles.length;i++){
 				if (articles[i].mode == "published"){
 					latestchapter = i;
 				}
 			}
-			var chstr = "第 "+articles[latestchapter].chapternumber+" 章  "+articles[latestchapter].chaptername;
-			var ntcp = articles.length >0 ? chstr : "無章節";
+			var nctp;
+			if (articles.length >0 && latestchapter >=0){
+				ntcp = "第 "+articles[latestchapter].chapternumber+" 章  "+articles[latestchapter].chaptername;
+			}
+			else{
+				ntcp = null;
+			}
+			//var ntcp = articles.length >0 ? chstr : "無章節";
 			var fontsize = req.session && req.session.fontsize ? req.session.fontsize : "15px";
 			var user = req.session && req.session.user ? req.session.user : null;
 			console.log("read book ntcp:"+ntcp);
@@ -83,6 +90,19 @@ router.get('/read/:bookid', function(req, res, next) {
 
 router.get('/readarticle/:bookid/:chapter/:fontsize', function(req, res, next) {
 	req.session.fontsize = req.params.fontsize;
+
+	//update viewhistory
+	if (req.session && req.session.user){
+		viewhistoryupdateHelper(req.session.user._id, req.params.bookid,
+		function(err, newviewhistory){
+			if (err){
+				res.send(err);
+			}
+			console.log("viewhistory update:");
+			req.session.user.viewhistory = newviewhistory;
+		});
+	}
+
 
 	// update clicks
 	bookclickHelper(req.params.bookid, function(err){
@@ -163,6 +183,7 @@ router.get('/recommendvote/:bookid/:booktickets', function(req, res, next) {
 				res.send(err)
 			}
 			else{
+				req.session.user.tickets -= tickets;
 				res.redirect(backurl);
 			}
 		});

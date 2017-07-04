@@ -29,7 +29,7 @@ block content
 					span.text-primary(style="margin-left:10px;") #{ntcp}
 		div(style="display: table;width: 100%; padding-top:10px; padding-bottom:10px;")
 			div.col-xs-6(style="float: none;display: table-cell;vertical-align: middle;")
-				a(href="/readarticle/"+book._id+"/0/"+fontsize)
+				a(href= ntcp ? "/readarticle/"+book._id+"/0/"+fontsize : "")
 					button(style="width: 100%;") 開始閱讀
 			div.col-xs-6(style="float: none;display: table-cell;vertical-align: middle;")
 				a(href="/addmybook/"+book._id)
