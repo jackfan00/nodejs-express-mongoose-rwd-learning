@@ -1,7 +1,9 @@
 var express = require('express');
 var router = express.Router();
 var bcrypt = require('bcrypt-nodejs');
-
+var bookclickHelper = require('./bookclickHelper.js');
+var recommendvoteHelper = require('./recommendvoteHelper.js');
+//
 var Bookmodel = require('../models/book.js');
 var Usermodel = require('../models/user.js');
 var Authormodel = require('../models/author.js');
@@ -44,6 +46,7 @@ router.get('/signout', function(req, res, next) {
 	res.redirect('/');
 });
 
+
 router.get('/read/:bookid', function(req, res, next) {
 	Bookmodel
 	.findOne({_id: req.params.bookid})
@@ -55,21 +58,44 @@ router.get('/read/:bookid', function(req, res, next) {
 		else{
 			
 			var articles = book.articles;
-			var chstr = "第 "+articles[articles.length-1].chapternumber+" 章  "+articles[articles.length-1].chaptername;
+			var latestchapter=0;
+			for (var i=0; i<articles.length;i++){
+				if (articles[i].mode == "published"){
+					latestchapter = i;
+				}
+			}
+			var chstr = "第 "+articles[latestchapter].chapternumber+" 章  "+articles[latestchapter].chaptername;
 			var ntcp = articles.length >0 ? chstr : "無章節";
+			var fontsize = req.session && req.session.fontsize ? req.session.fontsize : "15px";
+			var user = req.session && req.session.user ? req.session.user : null;
 			console.log("read book ntcp:"+ntcp);
-			if (req.session && req.session.user){
-				res.render('readbookindex', { book: book, user: req.session.user, cats: cats, ntcp: ntcp});
-			}
-			else{
-				res.render('readbookindex', { book: book, cats: cats, ntcp: ntcp});
-			}
+			//if (req.session && req.session.user){
+			res.render('readbookindex', { book: book, fontsize: fontsize, user: user, cats: cats, ntcp: ntcp});
+			//}
+			//else{
+			//	res.render('readbookindex', { book: book, fontsize: fontsize, cats: cats, ntcp: ntcp});
+			//}
 		}
 	});	
 });
 
 
-router.get('/readarticle/:bookid/:chapter', function(req, res, next) {
+
+router.get('/readarticle/:bookid/:chapter/:fontsize', function(req, res, next) {
+	req.session.fontsize = req.params.fontsize;
+
+	// update clicks
+	bookclickHelper(req.params.bookid, function(err){
+		if (err){
+			console.log("clicks update err:"+err);
+		}
+		else{
+			console.log("clicks +1");
+		}
+	});
+	//
+	
+	//
 	Bookmodel
 	.findOne({_id: req.params.bookid})
 	.populate('articles')
@@ -80,7 +106,7 @@ router.get('/readarticle/:bookid/:chapter', function(req, res, next) {
 		else{
 			console.log("read book:"+book);
 			var articles = book.articles;
-			var chapter = req.params.chapter;
+			var chapter = Math.min(req.params.chapter, articles.length-1);
 			if (articles.length > chapter){
 				
 				ArticleContentmodel.findOne({_id: articles[chapter].contentID}, function(err, articlecontent){
@@ -89,13 +115,15 @@ router.get('/readarticle/:bookid/:chapter', function(req, res, next) {
 					}
 					else{
 						chname = "第 "+articles[chapter].chapternumber+" 章  "+articles[chapter].chaptername;
+						var user = req.session && req.session.user ? req.session.user : null;
+						//if (req.session && req.session.user){
+						res.render('readarticleindex', { booktickets: book.alltickets, content: articlecontent.content, fontsize: req.session.fontsize, maxchapter: articles.length-1, chapter: chapter, bookid: book._id, bookname: book.name, chname: chname, user: user});
+						//}
+						//else{
+						//	res.render('readarticleindex', { content: articlecontent.content, maxchapter: articles.length-1, chapter: chapter, bookid: book._id, bookname: book.name, chname: chname});
+						//}
+							
 
-						if (req.sesssion && req.sesssion.user){
-							res.render('readarticleindex', { content: articlecontent.content, bookid: book._id, bookname: book.name, chname: chname, user: req.sesssion.user});
-						}
-						else{
-							res.render('readarticleindex', { content: articlecontent.content, bookid: book._id, bookname: book.name, chname: chname});
-						}
 					}
 					
 				})
@@ -109,6 +137,41 @@ router.get('/readarticle/:bookid/:chapter', function(req, res, next) {
 		}
 	});	
 });
+
+router.get('/recommend/:bookid/:bookname/:chapter/:booktickets', function(req, res, next) {
+	
+	var backurl = "/readarticle/"+req.params.bookid+"/"+req.params.chapter+"/"+req.session.fontsize;
+	req.session.forward = backurl;
+	if (req.session && req.session.user){
+		res.render('recommendvote',{user: req.session.user, bookid: req.params.bookid, bookname: req.params.bookname, 
+		tickets: req.session.user.tickets, backurl: backurl, booktickets: req.params.booktickets});
+	}
+	else{		
+		res.redirect('/signin');
+	}
+});
+
+router.get('/recommendvote/:bookid/:booktickets', function(req, res, next) {
+	
+	var backurl = req.session.forward;
+	if (req.session && req.session.user){
+		var tickets = req.params.booktickets>0 ? req.params.booktickets : req.session.user.tickets;
+		recommendvoteHelper(req.session.user._id, req.params.bookid, tickets, 
+		function(err){
+			if (err){
+				console.log("recommendvote err:"+err);
+				res.send(err)
+			}
+			else{
+				res.redirect(backurl);
+			}
+		});
+	}
+	else{
+		res.redirect('/signin');
+	}
+});
+
 
 //post
 
@@ -127,8 +190,14 @@ router.post('/signin', function(req, res, next) {
 						req.session.user = user;
 						//
 						console.log("req.session.user="+req.session.user);
-						res.redirect('/');
-						
+						if (req.session && req.session.forward){
+							var forward = req.session.forward;
+							req.session.forward = "/";
+							res.redirect(forward);
+						}
+						else{
+							res.redirect('/');
+						}
 					}
 					else {
 						console.log("密碼錯誤:"+user);

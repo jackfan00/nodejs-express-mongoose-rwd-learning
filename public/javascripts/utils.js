@@ -155,18 +155,22 @@
 			return false;
 		}
 	}
-	function fontsizeup(){
+	function fontsizeup(bookid, chapter){
 		var fontSize = parseInt($("p#content").css("font-size"));
-		fontSize = Math.min(fontSize+1, 30) + "px";
-		$("p#content").css({'font-size':fontSize});
-
+		fontSize = Math.min(fontSize+1, 50) + "px";
+		//$("p#content").css({'font-size':fontSize});
 		console.log(fontSize);
+		window.location.href = "/readarticle/"+bookid+"/"+chapter+"/"+fontSize;
+
+		
 	}
 	
-	function fontsizedown(){
+	function fontsizedown(bookid, chapter){
 		var fontSize = parseInt($("p#content").css("font-size"));
-		fontSize = Math.max(fontSize-1, 12) + "px";
-		$("p#content").css({'font-size':fontSize});
-
+		fontSize = Math.max(fontSize-1, 14) + "px";
+		//$("p#content").css({'font-size':fontSize});
 		console.log(fontSize);
+		window.location.href = "/readarticle/"+bookid+"/"+chapter+"/"+fontSize;
+
+		
 	}

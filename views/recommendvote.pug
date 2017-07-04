@@ -1,0 +1,40 @@
+extends layout
+
+block content
+	include ./menubar1
+	div.container-fluid.text-center(style="padding-top:10px;padding-bottom:10px;background-color:#fee")
+		div(style="display: table;width: 100%;padding-top:15px;padding-bottom:15px")
+			div.col-xs-3(style="float: none;display: table-cell;vertical-align: middle;")
+				a.btn.btn-default(href=backurl)
+					h4 返回
+			div.col-xs-9.text-center(style="float: none;display: table-cell;vertical-align: middle;")
+				h4 推薦#{bookname} 目前有#{booktickets}票
+	div(class="container-fluid" style="padding-top:10px;padding-bottom:10px;background-color:#eef")
+		div.row
+			div.col-xs-4
+				a.btn.btn-default(href="/recommendvote/"+bookid+"/1" style="width:100%;" disabled= tickets>0 ? false : true)
+					h4 1
+					h4 推薦票
+			div.col-xs-4
+				a.btn.btn-default(href="/recommendvote/"+bookid+"/2" style="width:100%;" disabled= tickets>1 ? false : true)
+					h4 2
+					h4 推薦票
+			div.col-xs-4
+				a.btn.btn-default(href="/recommendvote/"+bookid+"/3" style="width:100%;" disabled= tickets>2 ? false : true)
+					h4 3
+					h4 推薦票
+		div.row(style="margin-top:10px;")
+			div.col-xs-4
+				a.btn.btn-default(href="/recommendvote/"+bookid+"/4" style="width:100%;" disabled= tickets>3 ? false : true)
+					h4 4
+					h4 推薦票
+			div.col-xs-4
+				a.btn.btn-default(href="/recommendvote/"+bookid+"/5" style="width:100%;" disabled= tickets>4 ? false : true)
+					h4 5
+					h4 推薦票
+			div.col-xs-4
+				a.btn.btn-default(href="/recommendvote/"+bookid+"/-1" style="width:100%;" disabled= tickets>0 ? false : true)
+					h4 全部
+					h4 推薦票
+		div.row(style="margin-top:10px;")
+			h4.text-center 你目前有#{tickets}推薦票
