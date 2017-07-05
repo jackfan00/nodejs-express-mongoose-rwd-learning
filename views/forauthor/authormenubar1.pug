@@ -1,8 +1,13 @@
 
-div(class="container-fluid")
+div(class="container-fluid" )
 	div(style="display: table;width: 100%; padding-top:15px;padding-bottom:15px")
 		a.btn.btn-default(href="/" style="margin-right:10px") 回首頁
 		a.btn.btn-danger(href="/author/" style="margin-right:10px") 作家首頁
+		- if (authorlogined) {
+		a.btn.btn-info.pull-right(href="/author/authorsignout") 作家登出
+		- }
+div(class="container-fluid" style="background-color:#eef")
+	div(style="display: table;width: 100%; padding-top:15px;padding-bottom:15px")
 		- if (authorlogined) {	
 		a.btn.btn-default(href="/author/bookmanager" style="margin-right:10px") 作品管理			
 		a.btn.btn-default(href="/author/createnewbook" style="margin-right:10px") 建新作品
@@ -14,7 +19,7 @@ div(class="container-fluid")
 				span.spacing 通知
 						
 		- if (user) {
-		a.btn.btn-default(href="/author/signout" style="margin-right:10px") 會員登出
+		a.btn.btn-default.pull-right(href="/author/signout" style="margin-right:0px") 會員登出
 		// li.dropdown
 			a.dropdown-toggle(href="#" data-toggle="dropdown")
 				span.glyphicon.glyphicon-user

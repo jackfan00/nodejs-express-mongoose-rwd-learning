@@ -17,14 +17,14 @@ block content
 							a.btn.btn-info(href="/author/authorsignout") 作家登出
 			// div.calendar
 
-		div.container-fluid(style="padding-top: 10px;padding-bottom: 10px;")
-			div.row(style="display: table;width: 100%;")
-				div.col-xs-4(style="float: none;display: table-cell;vertical-align: middle;background-color: #fff;")
+		div.container-fluid(style="padding-top: 10px;padding-bottom: 10px;padding-left:0px;padding-right:0px")
+			div(style="display: table;width: 100%;")
+				div.col-xs-3(style="float: none;display: table-cell;vertical-align: middle;background-color: #fff;")
 					img.img-responsive.img-thumbnail.center-block(src=user.headimg style="margin-top:10px;")
 					h4.text-center #{authoruser.penname}
-				div.col-xs-4(style="float: none;display: table-cell;vertical-align: middle;")
+				div.col-xs-9(style="float: none;display: table-cell;vertical-align: middle;")
 					h4.text-center 總共寫了#{wordcount}字
-				div.col-xs-4(style="float: none;display: table-cell;vertical-align: middle;")
+				// div.col-xs-3(style="float: none;display: table-cell;vertical-align: middle;")
 					a.btn.btn-info.pull-right(href="/author/authorsignout") 作家登出
 			
 		- }

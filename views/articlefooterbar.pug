@@ -1,13 +1,13 @@
 div(class="container-fluid" )
 		div(style="display: table;width: 100%; padding-top:10px; padding-bottom:10px;")
 			div.col-xs-4(style="float: none;display: table-cell;vertical-align: middle;padding:0px")
-				- var prechapter = (chapter-1) >=0 ? chapter-1 : 0;
+				- var prechapter = previouschapter >=0 ? previouschapter : chapter;
 				a.btn.btn-default(href="/readarticle/"+bookid+"/"+prechapter+"/"+fontsize style="width: 100%;") 上一章
 			div.col-xs-4(style="float: none;display: table-cell;vertical-align: middle;padding:0px")
 				a.btn.btn-default.center-block(href="/listchapters/"+bookid style="width: 100%;") 目錄
 			div.col-xs-4(style="float: none;display: table-cell;vertical-align: middle;padding:0px")
-				- var nextchapter = chapter+1;
-				- if (nextchapter > maxchapter){
+				
+				- if (nextchapter < 0 ){
 				a.btn.btn-default.pull-right(style="width: 100%;") 待續..
 				- }
 				- else {

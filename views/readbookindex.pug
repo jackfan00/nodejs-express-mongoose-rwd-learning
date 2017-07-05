@@ -13,23 +13,23 @@ block content
 	- var bookdes = book.des;
 	- var comments = book.comments;
 	div.container-fluid
-		div.row(style="display: table;")
-			div.col-xs-3(style="float: none;display: table-cell;vertical-align: middle;")
-				img.img-responsive(src= bookcoverimg)
-			div.col-xs-9(style="float: none;display: table-cell;vertical-align: middle;")
-				h4 #{bookname}
+		div.row(style="display: table; background-color: antiquewhite;")
+			div.col-xs-2(style="float: none;display: table-cell;vertical-align: middle;")
+				img.img-responsive(src= bookcoverimg )
+			div.col-xs-10(style="float: none;display: table-cell;vertical-align: middle;")
+				h5(style="margin-top:5px;margin-bottom:5px;") #{bookname}
 					span.badge.pull-right(style="margin-right:10px;") #{category}
 					span.badge.pull-right(style="margin-right:10px;") #{bookstatus}
 					// small 分類:#{category}
 					// small 狀態:#{bookstatus}
-				h4 作者:#{authorname}
-				h6 更新:
+				h5(style="margin-top:5px;margin-bottom:5px;") 作者:#{authorname}
+				h6(style="margin-top:5px;margin-bottom:5px;") 更新:
 					span.text-primary(style="margin-left:10px;") #{publishedupdate_at}
-				h6 最新:
-					span.text-primary(style="margin-left:10px;") #{ntcp}
+		h6 最新:
+			span.text-primary(style="margin-left:10px;") #{ntcp}
 		div(style="display: table;width: 100%; padding-top:10px; padding-bottom:10px;")
 			div.col-xs-6(style="float: none;display: table-cell;vertical-align: middle;")
-				a(href= ntcp ? "/readarticle/"+book._id+"/0/"+fontsize : "")
+				a(href= ntcp ? "/readarticle/"+book._id+"/"+firstchapter+"/"+fontsize : "")
 					button(style="width: 100%;") 開始閱讀
 			div.col-xs-6(style="float: none;display: table-cell;vertical-align: middle;")
 				a(href="/addmybook/"+book._id)

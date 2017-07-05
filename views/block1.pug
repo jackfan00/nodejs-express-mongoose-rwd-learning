@@ -1,3 +1,4 @@
+
 div.list-group
 	div(class="list-group-item list-group-item-info") 點擊排行
 		a.pull-right(href="#") 更多..
@@ -6,13 +7,14 @@ div.list-group
 	- 	var category = cats[allclicks_books[i].category];
 	- 	var bookname = allclicks_books[i].name;
 	- 	var authorname = allclicks_books[i].authorID.penname;
-	- 	var allclicks = allclicks_books[i].allclicks;
+	- 	var ranking = allclicks_books[i].allclicks;
 	- 	var bookcoverimg = allclicks_books[i].coverimg;
 	- 	var bookstatus = allclicks_books[i].status;
 	- 	var bookwordcount = allclicks_books[i].bookwordcount;
 	- 	var bookdes = allclicks_books[i].des;
 	- 	var bookid = allclicks_books[i]._id;
-	-	var id = i;
+	-	var id = "click"+i;
+	-	var itemdes = "點擊";
 		include booklistitem
 	- }
 
@@ -20,32 +22,72 @@ div.list-group
 div.list-group
 	div(class="list-group-item list-group-item-info") 推薦排行
 		a.pull-right(href="#") 更多..
-	a.list-group-item(href="#") 都市-百練成神-作者溫
-	a.list-group-item(href="#") 都市-百練成神-作者溫
-	a.list-group-item(href="#") 都市-百練成神-作者溫
-	a.list-group-item(href="#") 都市-百練成神-作者溫
+	- for (var i=0;i<alltickets_books.length; i++){
+	- 	var category = cats[alltickets_books[i].category];
+	- 	var bookname = alltickets_books[i].name;
+	- 	var authorname = alltickets_books[i].authorID.penname;
+	- 	var ranking = alltickets_books[i].alltickets;
+	- 	var bookcoverimg = alltickets_books[i].coverimg;
+	- 	var bookstatus = alltickets_books[i].status;
+	- 	var bookwordcount = alltickets_books[i].bookwordcount;
+	- 	var bookdes = alltickets_books[i].des;
+	- 	var bookid = alltickets_books[i]._id;
+	-	var id = "recommend"+i;
+	-	var itemdes = "推薦";
+		include booklistitem
+	- }
 
 div.list-group
 	div(class="list-group-item list-group-item-info") 收藏排行
 		a.pull-right(href="#") 更多..
-	a.list-group-item(href="#") 都市-百練成神-作者溫
-	a.list-group-item(href="#") 都市-百練成神-作者溫
-	a.list-group-item(href="#") 都市-百練成神-作者溫
-	a.list-group-item(href="#") 都市-百練成神-作者溫
+	- for (var i=0;i<collect_books.length; i++){
+	- 	var category = cats[collect_books[i].category];
+	- 	var bookname = collect_books[i].name;
+	- 	var authorname = collect_books[i].authorID.penname;
+	- 	var ranking = collect_books[i].collectusers;
+	- 	var bookcoverimg = collect_books[i].coverimg;
+	- 	var bookstatus = collect_books[i].status;
+	- 	var bookwordcount = collect_books[i].bookwordcount;
+	- 	var bookdes = collect_books[i].des;
+	- 	var bookid = collect_books[i]._id;
+	-	var id = "collect"+i;
+	-	var itemdes = "收藏";
+		include booklistitem
+	- }
 
 div.list-group
 	div(class="list-group-item list-group-item-info") 新書上架
 		a.pull-right(href="#") 更多..
-	a.list-group-item(href="#") 都市-百練成神-作者溫
-	a.list-group-item(href="#") 都市-百練成神-作者溫
-	a.list-group-item(href="#") 都市-百練成神-作者溫
-	a.list-group-item(href="#") 都市-百練成神-作者溫
+	- for (var i=0;i<newbooks_books.length; i++){
+	- 	var category = cats[newbooks_books[i].category];
+	- 	var bookname = newbooks_books[i].name;
+	- 	var authorname = newbooks_books[i].authorID.penname;
+	- 	var ranking = (newbooks_books[i].create_at.getMonth()+1)+"月/"+newbooks_books[i].create_at.getDate()+"日 ";
+	- 	var bookcoverimg = newbooks_books[i].coverimg;
+	- 	var bookstatus = newbooks_books[i].status;
+	- 	var bookwordcount = newbooks_books[i].bookwordcount;
+	- 	var bookdes = newbooks_books[i].des;
+	- 	var bookid = newbooks_books[i]._id;
+	-	var id = "newbook"+i;
+	-	var itemdes = "新書";
+		include booklistitem
+	- }
 
 div.list-group
 	div(class="list-group-item list-group-item-info") 最近更新
 		a.pull-right(href="#") 更多..
-	a.list-group-item(href="#") 都市-百練成神-作者溫
-	a.list-group-item(href="#") 都市-百練成神-作者溫
-	a.list-group-item(href="#") 都市-百練成神-作者溫
-	a.list-group-item(href="#") 都市-百練成神-作者溫
+	- for (var i=0;i<newupdate_books.length; i++){
+	- 	var category = cats[newupdate_books[i].category];
+	- 	var bookname = newupdate_books[i].name;
+	- 	var authorname = newupdate_books[i].authorID.penname;
+	- 	var ranking = (newupdate_books[i].publishedupdate_at.getMonth()+1)+"月/"+newupdate_books[i].publishedupdate_at.getDate()+"日 ";
+	- 	var bookcoverimg = newupdate_books[i].coverimg;
+	- 	var bookstatus = newupdate_books[i].status;
+	- 	var bookwordcount = newupdate_books[i].bookwordcount;
+	- 	var bookdes = newupdate_books[i].des;
+	- 	var bookid = newupdate_books[i]._id;
+	-	var id = "updatebook"+i;
+	-	var itemdes = "更新";
+		include booklistitem
+	- }
 	

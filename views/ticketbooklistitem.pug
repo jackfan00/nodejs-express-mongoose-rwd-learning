@@ -5,11 +5,10 @@ div.panel.panel-default(style="margin-bottom: 0px;")
 			div(style="display: table;width: 100%;padding-top:15px;padding-bottom:15px;")
 				div.col-xs-6(style="float: none;display: table-cell;vertical-align: middle;")
 					h4.panel-title #{bookname}
-						
 				// div.col-xs-4(style="float: none;display: table-cell;vertical-align: middle;")
 					h4.panel-title.pull-right #{bookwordcount}字
 				div.col-xs-6(style="float: none;display: table-cell;vertical-align: middle;")
-					h4.panel-title.pull-right #{bookwordcount}字 - #{ranking}#{itemdes}
+					h4.panel-title.pull-right #{bookwordcount}字 - #{alltickets}推薦
 			
 				
 
@@ -17,7 +16,7 @@ div.panel.panel-default(style="margin-bottom: 0px;")
 		a(href="/read/"+bookid)
 			div.row(style="display: table;")
 				div.col-xs-3(style="float: none;display: table-cell;vertical-align: middle;background-color: darkgray;")
-					img.img-responsive(src= bookcoverimg style="width:80%;")
+					img.img-responsive(src= bookcoverimg style="width:100px;")
 				div.col-xs-9(style="float: none;display: table-cell;vertical-align: middle;")
 					h4 #{bookname}
 						span.badge.pull-right(style="margin-right:10px;") #{category}
@@ -26,5 +25,3 @@ div.panel.panel-default(style="margin-bottom: 0px;")
 					blockquote.blockquote-reverse(style="margin: 0 0 0px;border-right: 0px;padding:0px")
 						h5.text-muted(style="white-space: pre-wrap;font-size: 14px;max-height:44px;overflow:hidden;margin: 0px;") #{bookdes}
 						footer(style="font-size:100%;color:#000") #{authorname}
-	
-	

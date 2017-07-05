@@ -5,34 +5,37 @@ div.w3-example
 
 		form.form-horizontal(action="/author/editbook" method="post")
 			input.form-control(type="hidden" name="bookid"  value=book._id)
-			div.form-group
-				label.control-label.col-sm-2 文章:
-				div.col-sm-10
-					label.control-label.col-sm-2.inline 共#{book.articles.length}篇文章, 
-					label.control-label.inline #{wc}字
+			div(style="display: table;width: 100%; padding-top:15px;padding-bottom:15px")
+				div.col-xs-3(style="float: none;display: table-cell;vertical-align: middle;") 文章:
+				div.col-xs-9(style="float: none;display: table-cell;vertical-align: middle;")
+					h5 共#{book.articles.length}篇文章, #{wc}字
+					
 
-			div.form-group
-				label.control-label.col-sm-2 書名:
-				div.col-sm-10
+			div(style="display: table;width: 100%; padding-top:15px;padding-bottom:15px")
+				div.col-xs-3(style="float: none;display: table-cell;vertical-align: middle;") 書名:
+				div.col-xs-9(style="float: none;display: table-cell;vertical-align: middle;")
 					input.form-control(type="text" name="name" required="required" value=book.name disabled)
-			div.form-group
-				label.control-label.col-sm-2 類型:
-				div.col-sm-10
-					select(name="category")
+					
+			div(style="display: table;width: 100%; padding-top:15px;padding-bottom:15px")
+				div.col-xs-3(style="float: none;display: table-cell;vertical-align: middle;") 類型:
+				div.col-xs-9(style="float: none;display: table-cell;vertical-align: middle;")
+					select(name="category" style="font-size:18px")
 						- for (var i=0; i< cats.length; i++){
 							option(value= i selected= (book && (book.category===i)) ? true : false)= cats[i]
 						- }
 					// input.form-control(type="text" name="category" required="required")
-			div.form-group
-				label.control-label.col-sm-2 簡介:
-				div.col-sm-10
+					
+			div(style="display: table;width: 100%; padding-top:15px;padding-bottom:15px")
+				div.col-xs-3(style="float: none;display: table-cell;vertical-align: middle;") 簡介:
+				div.col-xs-9(style="float: none;display: table-cell;vertical-align: middle;")
 					textarea#description.form-control(rows="5" name="description" required="required") #{book.des}
-			div.form-group
-				div.col-sm-offset-2.col-sm-10
+					
+			div(style="display: table;width: 100%; padding-top:15px;padding-bottom:15px")
+				div.col-xs-offset-3.col-xs-9(style="display: table-cell;vertical-align: middle;")
 					button.btn.btn-default(type="submit") 作品修改
-					label.pull-right 字
-					span#span_wordcount.pull-right #{deswords}
-					label.pull-right 共
+					h5.pull-right 字
+					h5#span_wordcount.pull-right #{deswords}
+					h5.pull-right 共
 	h1
 							
 		

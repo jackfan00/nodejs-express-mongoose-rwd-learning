@@ -1,8 +1,9 @@
 extends ./layout
 block content
 	include ./authormenubar1
-	div.w3-example
-		h1 #{book.name}
+	div.w3-example(style="padding:0px;")
+		div.text-center(style="display: table;width: 100%; padding-top:15px;padding-bottom:15px;background-color:#fff")
+			h4 #{book.name}
 		include ./maintab
 		- if (mode == "bookinfo") {
 			include ./bookinfo

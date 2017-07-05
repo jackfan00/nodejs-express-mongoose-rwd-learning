@@ -4,6 +4,10 @@ var bcrypt = require('bcrypt-nodejs');
 var bookclickHelper = require('./bookclickHelper.js');
 var recommendvoteHelper = require('./recommendvoteHelper.js');
 var viewhistoryupdateHelper = require('./viewhistoryupdateHelper.js');
+var rankingHelper = require('./rankingHelper.js');
+var addmybookHelper = require('./addmybookHelper.js');
+var peoplereadsupdateHelper = require('./peoplereadsupdateHelper.js');
+
 //
 var Bookmodel = require('../models/book.js');
 var Usermodel = require('../models/user.js');
@@ -15,21 +19,19 @@ var cats=["玄幻","奇幻","武俠","仙俠","都市","歷史","科幻","靈異
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-	Bookmodel.find()	
-	.limit(5)
-	.sort('-allclicks')
-	.populate('authorID') //, ['penname'], { mode: 'published'})
-	.exec(function(err, books){
-		console.log("req.session:"+JSON.stringify(req.session));
-		if (req.session && req.session.user){
-			console.log("DDDDDDDDDDDDDDDDDD");
-			res.render('index', { allclicks_books: books, cats: cats, user: req.session.user });
+	
+	var user = req.session && req.session.user ? req.session.user : null;
+	rankingHelper(req, function(err, allclicks_books, alltickets_books, newbooks_books, newupdate_books, collect_books){
+		if (err){
+			res.send(err);
 		}
 		else{
-			res.render('index', { allclicks_books: books, cats: cats });
+			res.render('index', { allclicks_books: allclicks_books, alltickets_books: alltickets_books,
+			newbooks_books: newbooks_books, newupdate_books: newupdate_books, collect_books: collect_books,
+			cats: cats, user: user });
 		}
 	});
-			
+	
   
 });
 
@@ -47,6 +49,103 @@ router.get('/signout', function(req, res, next) {
 	res.redirect('/');
 });
 
+router.get('/clearmybooks', function(req, res, next) {
+	if (req.session && req.session.user){
+		Usermodel
+		.update({_id: req.session.user._id}, {$set: {mybooks: []}},
+		
+		function(err, raw){
+			if (err){
+				res.send(err);
+			}
+			else{
+				console.log("clearmybooks:"+JSON.stringify(raw));
+				res.redirect('mybookindex/0');
+			}
+		});
+		
+	}
+	else{
+		res.redirect('/signin');
+	}
+});
+
+router.get('/mybookindex/:state', function(req, res, next) {
+	req.session.forward = "/mybookindex";
+	if (req.session && req.session.user){
+		Usermodel
+		.findOne({_id: req.session.user._id})
+		.populate('mybooks author')
+		.exec(function(err, user){
+			if (err){
+				res.send(err);
+			}
+			else{
+				console.log("mybookindex user:"+user);
+				var message=null;
+				if (req.params.state==-1){
+					message="已經在書架上";
+				}
+				else if (req.params.state==-2){
+					message="已經超過書架最大容量";
+				}
+				
+					
+				res.render('mybookindex',{ message: message, mybook_books: user.mybooks, penname: user.author.penname, cats: cats});
+			}
+		});
+		
+	}
+	else{		
+		res.redirect('/signin');
+	}
+});
+
+router.get('/addmybook/:bookid', function(req, res, next) {
+	if (req.session && req.session.user){
+		addmybookHelper(req.session.user._id, req.params.bookid,
+		function(err, state){
+			if (err){
+				res.send(err);
+			}
+			else{
+				res.redirect('/mybookindex/'+state);
+			}
+		});
+		
+	}
+	else{		
+		res.redirect('/signin');
+	}
+});
+
+
+
+router.get('/myreadinghistory', function(req, res, next) {
+	
+	var backurl = "/myreadinghistory";
+	req.session.forward = backurl;
+	if (req.session && req.session.user){
+		Usermodel
+		.findOne({_id: req.session.user._id})
+		.populate('viewhistory author')
+		.exec(function(err, user){
+			if (err){
+				res.send(err);
+			}
+			else{
+				console.log("user:"+user);
+				res.render('viewhistoryindex',{ viewhistory_books: user.viewhistory, penname: user.author.penname, cats: cats});
+			}
+		});
+		
+	}
+	else{		
+		res.redirect('/signin');
+	}
+	
+});
+
 
 router.get('/read/:bookid', function(req, res, next) {
 	Bookmodel
@@ -60,9 +159,13 @@ router.get('/read/:bookid', function(req, res, next) {
 			
 			var articles = book.articles;
 			var latestchapter=-1;
+			var firstchapter=-1;
 			for (var i=0; i<articles.length;i++){
 				if (articles[i].mode == "published"){
 					latestchapter = i;
+				}
+				if (articles[i].mode == "published" && firstchapter==-1){
+					firstchapter = i;
 				}
 			}
 			var nctp;
@@ -77,7 +180,7 @@ router.get('/read/:bookid', function(req, res, next) {
 			var user = req.session && req.session.user ? req.session.user : null;
 			console.log("read book ntcp:"+ntcp);
 			//if (req.session && req.session.user){
-			res.render('readbookindex', { book: book, fontsize: fontsize, user: user, cats: cats, ntcp: ntcp});
+			res.render('readbookindex', { book: book, fontsize: fontsize, user: user, cats: cats, ntcp: ntcp, firstchapter: firstchapter});
 			//}
 			//else{
 			//	res.render('readbookindex', { book: book, fontsize: fontsize, cats: cats, ntcp: ntcp});
@@ -103,7 +206,19 @@ router.get('/readarticle/:bookid/:chapter/:fontsize', function(req, res, next) {
 		});
 	}
 
-
+	//update peoplereads
+	if (req.session && req.session.user){
+		peoplereadsupdateHelper(req.session.user._id, req.params.bookid,
+		function(err, state){
+			if (err){
+				res.send(err);
+			}
+			
+			console.log("peoplereads update state:"+state);
+		});
+	}
+	
+	
 	// update clicks
 	bookclickHelper(req.params.bookid, function(err){
 		if (err){
@@ -136,8 +251,24 @@ router.get('/readarticle/:bookid/:chapter/:fontsize', function(req, res, next) {
 					else{
 						chname = "第 "+articles[chapter].chapternumber+" 章  "+articles[chapter].chaptername;
 						var user = req.session && req.session.user ? req.session.user : null;
+						
+						var nextchapter=-1;
+						for (var i=chapter+1;i<articles.length;i++){
+							if (articles[i].mode == "published"){
+								nextchapter=i;
+								break;
+							}
+						}
+						var previouschapter=-1;
+						for (var i=chapter-1;i>=0;i--){
+							if (articles[i].mode == "published"){
+								previouschapter=i;
+								break;
+							}
+						}
 						//if (req.session && req.session.user){
-						res.render('readarticleindex', { booktickets: book.alltickets, content: articlecontent.content, fontsize: req.session.fontsize, maxchapter: articles.length-1, chapter: chapter, bookid: book._id, bookname: book.name, chname: chname, user: user});
+						res.render('readarticleindex', { booktickets: book.alltickets, content: articlecontent.content, fontsize: req.session.fontsize, 
+						nextchapter: nextchapter, previouschapter: previouschapter, chapter: chapter, bookid: book._id, bookname: book.name, chname: chname, user: user});
 						//}
 						//else{
 						//	res.render('readarticleindex', { content: articlecontent.content, maxchapter: articles.length-1, chapter: chapter, bookid: book._id, bookname: book.name, chname: chname});

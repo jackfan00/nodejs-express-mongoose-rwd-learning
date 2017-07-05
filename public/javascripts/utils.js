@@ -170,7 +170,11 @@
 		fontSize = Math.max(fontSize-1, 14) + "px";
 		//$("p#content").css({'font-size':fontSize});
 		console.log(fontSize);
-		window.location.href = "/readarticle/"+bookid+"/"+chapter+"/"+fontSize;
-
-		
+		window.location.href = "/readarticle/"+bookid+"/"+chapter+"/"+fontSize;		
+	}
+	
+	function clearmybooks(){
+		if (confirm("確定清空書架 ?") == true) {
+			window.location.href = "/clearmybooks";
+		} 
 	}

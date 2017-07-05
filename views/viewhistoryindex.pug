@@ -1,0 +1,29 @@
+extends layout
+
+block content
+
+	div.bg-primary.container-fluid(style="padding-top:10px;padding-bottom:10px;")
+		div(style="display: table;width: 100%;padding-top:15px;padding-bottom:15px")
+			div.col-xs-3(style="float: none;display: table-cell;vertical-align: middle;")
+				a(href="/")
+					button 首頁
+			div.col-xs-6.text-center(style="float: none;display: table-cell;vertical-align: middle;") 瀏覽記錄
+				 
+			div.col-xs-3(style="float: none;display: table-cell;vertical-align: middle;")
+				a(href="/clearreadinghistory")
+					button.btn-danger.pull-right 清空
+	- for (var i=viewhistory_books.length-1; i>=0;i--){
+	- 	var category = cats[viewhistory_books[i].category];
+	- 	var bookname = viewhistory_books[i].name;
+	- 	var authorname = penname;
+	- 	var ranking = viewhistory_books[i].allclicks;
+	- 	var bookcoverimg = viewhistory_books[i].coverimg;
+	- 	var bookstatus = viewhistory_books[i].status;
+	- 	var bookwordcount = viewhistory_books[i].bookwordcount;
+	- 	var bookdes = viewhistory_books[i].des;
+	- 	var bookid = viewhistory_books[i]._id;
+	-	var id = "click"+i;
+	-	var itemdes = "點擊";
+		include ./mybookitem
+	- }
+

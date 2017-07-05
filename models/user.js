@@ -11,7 +11,7 @@ var UserSchema = new Schema(
     birth_mon:       { type: Number },
     birth_day:       { type: Number },
 	gender:       { type: Number },
-    books:     [{ type: Schema.ObjectId, ref: 'Book' }],
+    mybooks:     [{ type: Schema.ObjectId, ref: 'Book' }],
     booksreadstatus: [{ type: Number }],
     coins:     { type: Number, default: 5000 },
     tickets:   { type: Number, default: 10 },
