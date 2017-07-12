@@ -8,6 +8,7 @@ var ArticleContentmodel = require('../models/articlecontent.js');
 
 
 var userupdate = function(userid, newviewhistory, callback ){
+	console.log("newviewhistory::"+newviewhistory);
 	Usermodel.update({_id: userid},
 		{ $set: {viewhistory: newviewhistory}},
 		function(err, raw){
@@ -28,6 +29,7 @@ var viewhistoryupdate = function(userid, bookid, callback){
 			var found = -1;
 			var newviewhistory=[];
 			//
+			console.log("user.viewhistory:"+user.viewhistory);
 			for (var i=0;i<user.viewhistory.length;i++){
 				if (user.viewhistory[i] == bookid){
 					found=i;
@@ -36,8 +38,8 @@ var viewhistoryupdate = function(userid, bookid, callback){
 			}
 			//
 			if (found == -1){
+				var newviewhistory=[];
 				if (user.viewhistory.length>=20){ 
-					var newviewhistory=[];
 					for (var i=1;i<user.viewhistory.length;i++){  //remove oldest one
 						newviewhistory.push(user.viewhistory[i]);
 					}
@@ -52,8 +54,8 @@ var viewhistoryupdate = function(userid, bookid, callback){
 				
 			}
 			else{   //move found one to newest
+				var newviewhistory=[];
 				for (var i=0;i<user.viewhistory.length;i++){
-					var newviewhistory=[];
 					if (i != found){
 						newviewhistory.push(user.viewhistory[i]);
 					}

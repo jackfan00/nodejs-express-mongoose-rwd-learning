@@ -113,7 +113,7 @@
 	function deletearticle(bookid, articleid, chaptername) {
 		console.log("deletearticle:"+articleid);
 		if (confirm("刪除文章: "+chaptername+" ?") == true) {
-			window.location.href = "/articles/deletearticle/writing/"+articleid+"/"+bookid;
+			window.location.href = "/author/deletearticle/writing/"+articleid+"/"+bookid;
 		} 
 
 	}

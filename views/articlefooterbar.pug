@@ -4,7 +4,7 @@ div(class="container-fluid" )
 				- var prechapter = previouschapter >=0 ? previouschapter : chapter;
 				a.btn.btn-default(href="/readarticle/"+bookid+"/"+prechapter+"/"+fontsize style="width: 100%;") 上一章
 			div.col-xs-4(style="float: none;display: table-cell;vertical-align: middle;padding:0px")
-				a.btn.btn-default.center-block(href="/listchapters/"+bookid style="width: 100%;") 目錄
+				a.btn.btn-default.center-block(href="/listchapters/"+bookid+"/0" style="width: 100%;") 目錄
 			div.col-xs-4(style="float: none;display: table-cell;vertical-align: middle;padding:0px")
 				
 				- if (nextchapter < 0 ){

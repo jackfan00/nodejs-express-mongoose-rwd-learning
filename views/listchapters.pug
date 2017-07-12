@@ -1,0 +1,34 @@
+extends layout
+
+block content
+	include ./menubar1
+	div.bg-primary.container-fluid(style="padding-top:10px;padding-bottom:10px;")
+		div(style="display: table;width: 100%;padding-top:15px;padding-bottom:15px")
+			div.col-xs-3(style="float: none;display: table-cell;vertical-align: middle;padding:0px")
+				a(href= backurl)
+					button 返回
+			div.col-xs-6.text-center(style="float: none;display: table-cell;vertical-align: middle;") #{book.name}
+				 
+			div.col-xs-3(style="float: none;display: table-cell;vertical-align: middle;padding:0px")
+				a(href="/")
+					button.pull-right 首頁
+
+	div.panel-heading(style="display: table; background-color: antiquewhite;width:100%")
+		div.col-xs-6(style="padding:0px") 共#{chapterindex.length}章
+		a.pull-right(href="/listchapters/"+book._id+"/"+order) 倒序
+
+	// div.panel.panel-default
+		div.panel-heading #{book.name}
+		
+	div.list-group
+		div(class="list-group-item list-group-item-info") 目錄
+			// a.pull-right(href="#") 更多..
+		// a.list-group-item(href="#")
+		- 	var bookid = book._id;
+		- 	for (var i=0;i<chapterindex.length; i++){
+		- 		var chapter = chapterindex[i];
+		- 		var chapterallname = chapterallnames[i];
+		- 		var chapterupdatetime = chapterupdatetimes[i];
+				include articlelistitem
+		-		
+		- 	}

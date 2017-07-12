@@ -4,6 +4,7 @@ var bcrypt = require('bcrypt-nodejs');
 var bookclickHelper = require('./bookclickHelper.js');
 var recommendvoteHelper = require('./recommendvoteHelper.js');
 var viewhistoryupdateHelper = require('./viewhistoryupdateHelper.js');
+var allrankingHelper = require('./allrankingHelper.js');
 var rankingHelper = require('./rankingHelper.js');
 var addmybookHelper = require('./addmybookHelper.js');
 var peoplereadsupdateHelper = require('./peoplereadsupdateHelper.js');
@@ -21,7 +22,7 @@ var cats=["玄幻","奇幻","武俠","仙俠","都市","歷史","科幻","靈異
 router.get('/', function(req, res, next) {
 	
 	var user = req.session && req.session.user ? req.session.user : null;
-	rankingHelper(req, function(err, allclicks_books, alltickets_books, newbooks_books, newupdate_books, collect_books){
+	allrankingHelper(req, function(err, allclicks_books, alltickets_books, newbooks_books, newupdate_books, collect_books){
 		if (err){
 			res.send(err);
 		}
@@ -29,6 +30,25 @@ router.get('/', function(req, res, next) {
 			res.render('index', { allclicks_books: allclicks_books, alltickets_books: alltickets_books,
 			newbooks_books: newbooks_books, newupdate_books: newupdate_books, collect_books: collect_books,
 			cats: cats, user: user });
+		}
+	});
+	
+  
+});
+
+router.get('/list100/:rank', function(req, res, next) {
+	
+	var user = req.session && req.session.user ? req.session.user : null;
+	rankingHelper(req, function(err, rank_books){
+		if (err){
+			res.send(err);
+		}
+		else{
+			itemname = ["點擊排行","推薦排行","收藏排行","新書上架","最近更新"];
+			itemdes = ["點擊","推薦","收藏","",""];
+			res.render('list100', { rank_books: rank_books, rank: req.params.rank, 
+				itemdes: itemdes[req.params.rank], itemname: itemname[req.params.rank],
+				cats: cats, user: user });
 		}
 	});
 	
@@ -46,6 +66,7 @@ router.get('/signup', function(req, res, next) {
 
 router.get('/signout', function(req, res, next) {
 	req.session.user = null;
+	req.session.authoruser = null;
 	res.redirect('/');
 });
 
@@ -119,6 +140,49 @@ router.get('/addmybook/:bookid', function(req, res, next) {
 	}
 });
 
+router.get('/listchapters/:bookid/:order', function(req, res, next) {
+	var backurl = "/read/"+req.params.bookid;
+	req.session.forward = "/listchapters/"+req.params.bookid+"/"+req.params.order;
+	
+	Bookmodel.findOne({_id: req.params.bookid})
+	.populate('articles')
+	.exec(function(err, book){
+		if (err){
+			console.log("目錄讀取失敗-listchapters-");
+			res.send(err);
+		}
+		else{
+			fontsize = req.session.fontsize ? req.session.fontsize : "15px";
+			var chapterindex=[], chapterallnames = [], chapterupdatetimes = [];
+			if (req.params.order==0){
+				for (var i=0;i<book.articles.length;i++){
+					if (book.articles[i].mode == "published"){
+						chapterindex.push(i);
+						chapterallnames.push("第 "+book.articles[i].chapternumber+" 章  "+book.articles[i].chaptername);
+						strday = book.articles[i].create_at.getFullYear()+"-"+(book.articles[i].create_at.getMonth()+1)+"-"
+						+book.articles[i].create_at.getDate()+" "+book.articles[i].create_at.getHours()+":"+book.articles[i].create_at.getMinutes();
+						chapterupdatetimes.push(strday);
+					}
+				}
+			}
+			else{
+				for (var i=book.articles.length-1;i>=0;i--){
+					if (book.articles[i].mode == "published"){
+						chapterindex.push(i);
+						chapterallnames.push("第 "+book.articles[i].chapternumber+" 章  "+book.articles[i].chaptername);
+						strday = book.articles[i].create_at.getFullYear()+"-"+(book.articles[i].create_at.getMonth()+1)+"-"
+							+book.articles[i].create_at.getDate()+" "+book.articles[i].create_at.getHours()+":"+book.articles[i].create_at.getMinutes();
+						chapterupdatetimes.push(strday);
+					}
+				}				
+			}
+			var user = req.session && req.session.user ? req.session.user : null;
+			res.render('listchapters',{order: 1-req.params.order, book: book, allarticles: book.articles, chapterindex: chapterindex, 
+				chapterallnames: chapterallnames, user: user, backurl: backurl,
+				chapterupdatetimes: chapterupdatetimes, fontsize: fontsize});
+		}
+	});
+});
 
 
 router.get('/myreadinghistory', function(req, res, next) {
@@ -148,6 +212,8 @@ router.get('/myreadinghistory', function(req, res, next) {
 
 
 router.get('/read/:bookid', function(req, res, next) {
+	
+	req.session.forward = "/read/"+req.params.bookid;
 	Bookmodel
 	.findOne({_id: req.params.bookid})
 	.populate('authorID comments articles')
@@ -178,9 +244,19 @@ router.get('/read/:bookid', function(req, res, next) {
 			//var ntcp = articles.length >0 ? chstr : "無章節";
 			var fontsize = req.session && req.session.fontsize ? req.session.fontsize : "15px";
 			var user = req.session && req.session.user ? req.session.user : null;
-			console.log("read book ntcp:"+ntcp);
+			console.log("read book author:"+book.authorID);
+			//
+			Authormodel.findOne({_id: book.authorID._id})
+			.populate('books')
+			.exec(function(err, bookauthor){
+				if (err){
+					res.send(err);
+				}
+				else{
+					res.render('readbookindex', { book: book, bookauthor: bookauthor, fontsize: fontsize, user: user, cats: cats, ntcp: ntcp, firstchapter: firstchapter, latestchapter: latestchapter});
+				}
+			});
 			//if (req.session && req.session.user){
-			res.render('readbookindex', { book: book, fontsize: fontsize, user: user, cats: cats, ntcp: ntcp, firstchapter: firstchapter});
 			//}
 			//else{
 			//	res.render('readbookindex', { book: book, fontsize: fontsize, cats: cats, ntcp: ntcp});
@@ -201,11 +277,12 @@ router.get('/readarticle/:bookid/:chapter/:fontsize', function(req, res, next) {
 			if (err){
 				res.send(err);
 			}
-			console.log("viewhistory update:");
+			console.log("viewhistory update:"+newviewhistory);
 			req.session.user.viewhistory = newviewhistory;
 		});
 	}
 
+	/*
 	//update peoplereads
 	if (req.session && req.session.user){
 		peoplereadsupdateHelper(req.session.user._id, req.params.bookid,
@@ -216,7 +293,7 @@ router.get('/readarticle/:bookid/:chapter/:fontsize', function(req, res, next) {
 			
 			console.log("peoplereads update state:"+state);
 		});
-	}
+	}*/
 	
 	
 	// update clicks
@@ -242,7 +319,7 @@ router.get('/readarticle/:bookid/:chapter/:fontsize', function(req, res, next) {
 			console.log("read book:"+book);
 			var articles = book.articles;
 			var chapter = Math.min(req.params.chapter, articles.length-1);
-			if (articles.length > chapter){
+			if (articles.length > chapter && articles[chapter].mode == "published"){
 				
 				ArticleContentmodel.findOne({_id: articles[chapter].contentID}, function(err, articlecontent){
 					if (err){
@@ -267,8 +344,10 @@ router.get('/readarticle/:bookid/:chapter/:fontsize', function(req, res, next) {
 							}
 						}
 						//if (req.session && req.session.user){
+						var	backurl = req.session.forward;
 						res.render('readarticleindex', { booktickets: book.alltickets, content: articlecontent.content, fontsize: req.session.fontsize, 
-						nextchapter: nextchapter, previouschapter: previouschapter, chapter: chapter, bookid: book._id, bookname: book.name, chname: chname, user: user});
+						backurl: backurl, nextchapter: nextchapter, previouschapter: previouschapter, chapter: chapter, 
+						bookid: book._id, bookname: book.name, chname: chname, user: user});
 						//}
 						//else{
 						//	res.render('readarticleindex', { content: articlecontent.content, maxchapter: articles.length-1, chapter: chapter, bookid: book._id, bookname: book.name, chname: chname});
@@ -308,13 +387,13 @@ router.get('/recommendvote/:bookid/:booktickets', function(req, res, next) {
 	if (req.session && req.session.user){
 		var tickets = req.params.booktickets>0 ? req.params.booktickets : req.session.user.tickets;
 		recommendvoteHelper(req.session.user._id, req.params.bookid, tickets, 
-		function(err){
+		function(err, votes){
 			if (err){
 				console.log("recommendvote err:"+err);
 				res.send(err)
 			}
 			else{
-				req.session.user.tickets -= tickets;
+				req.session.user.tickets -= votes;
 				res.redirect(backurl);
 			}
 		});

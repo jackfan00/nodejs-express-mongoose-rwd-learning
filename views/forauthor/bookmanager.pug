@@ -12,7 +12,11 @@ block content
 				div.col-xs-2(style="float: none;display: table-cell;vertical-align: middle;") 收藏						
 						// th 操作
 										
-			each book in books
+			// each book in books
+			- for (var i=0; i<books.length; i++){
+				- var book = books[i]
+				- var chapter = newestchapters[i]
+				- var newestchapter = chapter>=0 ? "第 "+book.articles[chapter].chapternumber+" 章  "+book.articles[chapter].chaptername : "無最新章節"
 				div(style="background-color:#f1f1f1;margin-bottom:2px")
 					div.text-center(style="display: table;width: 100%; padding-top:15px;padding-bottom:15px;background-color:#e1f1f1;")
 						div.col-xs-3(style="float: none;display: table-cell;vertical-align: middle;")
@@ -20,11 +24,11 @@ block content
 								img(src= book.coverimg style="width:20%;")
 							h5 #{book.name}
 						div.col-xs-5(style="float: none;display: table-cell;vertical-align: middle;")
-							h5(style="vertical-align: middle;") 無最新章節
+							h5(style="vertical-align: middle;") #{newestchapter}
 						div.col-xs-2(style="float: none;display: table-cell;vertical-align: middle;")
 							h5(style="vertical-align: middle;")= cats[book.category]
 						div.col-xs-2(style="float: none;display: table-cell;vertical-align: middle;")
-							h5(style="vertical-align: middle;")= book.collectusers.length
+							h5(style="vertical-align: middle;")= book.collectusers
 							
 					div.text-center(style="display: table;width: 100%; padding-top:15px;padding-bottom:15px")
 						div.col-xs-3(style="float: none;display: table-cell;vertical-align: middle;")
@@ -35,7 +39,7 @@ block content
 							a.list-group-item(href="/author/editbook/" + book._id ) 修改作品資訊
 						div.col-xs-3(style="float: none;display: table-cell;vertical-align: middle;")
 							a.list-group-item.list-group-item-danger(href="#" onclick="deletebook('/author/deletebook/"+book._id+"', '"+book.name+"')") 刪除作品
-									
+			- }						
 		h1
 							
 		

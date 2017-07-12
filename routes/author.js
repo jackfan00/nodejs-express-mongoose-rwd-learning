@@ -84,14 +84,29 @@ router.get('/authorprofile', function(req, res, next) {
 
 router.get('/bookmanager', function(req, res, next) {
 	if (req.session.authoruser){
-		Bookmodel.find({ authorID: req.session.authoruser._id }, function(err, books){
+		Bookmodel.find({ authorID: req.session.authoruser._id })
+		.populate('articles')
+		.exec(function(err, books){
 			if (err){
 				console.log("book findOne err");
 				res.send(err);
 			}
 			else if (books){
 				console.log("find books:"+books);
-				res.render('forauthor/bookmanager', {user: req.session.user, cats: cats, books: books, authorlogined: true});				
+				//
+				var newestchapters=[];
+				for (var i=0;i<books.length;i++){
+					var newestc=-1;
+					for (var j=0;j<books[i].articles.length;j++){
+						if (books[i].articles[j].mode=="published"){
+							newestc = j;
+						}
+					}
+					newestchapters.push(newestc);
+				}
+				console.log("find newestchapters:"+newestchapters);
+				//
+				res.render('forauthor/bookmanager', {newestchapters: newestchapters, user: req.session.user, cats: cats, books: books, authorlogined: true});				
 			}
 			else{
 				console.log(req.session.user.author.penname+" 沒有寫書");
@@ -593,13 +608,28 @@ router.post('/createnewbook', function(req, res, next) {
 		newBook.authorID = req.session.authoruser._id;
 		//newBook.authorname = req.session.user.penname;
 		//newBook.booknumber = randomstring.generate({length: 16, charset: 'numeric'});
-		newBook.save(function (err, user) {
-		if (err) {
-			console.log("new book save err");
-			throw err;
-		}});
-		console.log("new book saved");
-		res.redirect('/author/bookmanager');
+		newBook.save(function (err, book) {
+			if (err) {
+				console.log("new book save err");
+				throw err;
+			}
+			else{
+				Authormodel.update({_id: req.session.authoruser._id},
+					{$push: {books: book._id}},
+					function(err,raw){
+						if (err){
+							console.log("作者增加書籍-createnewbook-失敗");
+							res.send(err);
+						}
+						else{
+							console.log("new book saved:"+book);
+							res.redirect('/author/bookmanager');							
+						}
+					});
+					
+			}
+		});
+		
 	}
 	else{
 		res.redirect('/author');

@@ -1,0 +1,34 @@
+
+div.list-group
+	div(class="list-group-item list-group-item-info") #{itemname}
+		// a.pull-right(href="/list100/1") 更多..
+	- for (var i=0;i<rank_books.length; i++){
+	- 	var category = cats[rank_books[i].category];
+	- 	var bookname = rank_books[i].name;
+	- 	var authorname = rank_books[i].authorID.penname;
+	-	var ranking;
+	-	if (rank==0){
+	- 		ranking = rank_books[i].allclicks > 10000 ? Math.floor(rank_books[i].allclicks/1000)/10+"萬" : rank_books[i].allclicks;
+	- 	}
+	-	else if (rank==1){
+	- 		ranking = rank_books[i].alltickets > 10000 ? Math.floor(rank_books[i].alltickets/1000)/10+"萬" : rank_books[i].alltickets;
+	- 	}
+	-	else if (rank==2){
+	- 		ranking = rank_books[i].collectusers > 10000 ? Math.floor(rank_books[i].collectusers/1000)/10+"萬" : rank_books[i].collectusers;
+	- 	}
+	-	else if (rank==3){
+	-		ranking = (rank_books[i].create_at.getMonth()+1)+"/"+rank_books[i].create_at.getDate();
+	-	}
+	-	else if (rank==4){
+	-		ranking = (rank_books[i].publishedupdate_at.getMonth()+1)+"/"+rank_books[i].publishedupdate_at.getDate();
+	-	}
+	- 	var bookcoverimg = rank_books[i].coverimg;
+	- 	var bookstatus = rank_books[i].status;
+	-	var ttt = Math.floor(rank_books[i].bookwordcount/1000)/10;
+	- 	var bookwordcount = rank_books[i].bookwordcount>10000 ? ttt+"萬" : rank_books[i].bookwordcount;
+	- 	var bookdes = rank_books[i].des;
+	- 	var bookid = rank_books[i]._id;
+	-	var id = "rank"+i;
+		// -	var itemdes = #{itemdes};
+		include booklistitem
+	- }

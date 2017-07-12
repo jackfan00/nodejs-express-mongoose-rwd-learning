@@ -12,7 +12,7 @@ var bookupdate = function(newdailytickets, bookid, tickets, callback ){
 				return callback(err);
 			}
 			console.log("recommendvoteupdate success:"+JSON.stringify(raw))
-			callback();
+			callback(null, tickets);
 		});
 };
 
@@ -61,7 +61,7 @@ var recommendvote = function(userid, bookid, tickets, callback ){
 					});
 			}
 			else{
-				callback(-1);
+				callback(null,0);
 			}
 			
 		});

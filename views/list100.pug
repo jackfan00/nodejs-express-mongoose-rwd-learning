@@ -1,0 +1,10 @@
+extends layout
+
+block content
+	include ./menubar1
+	include ./menubar2
+	- if (user) {
+	include ./menubar3
+	- }
+	include ./rank_100
+

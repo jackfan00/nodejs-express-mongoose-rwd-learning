@@ -12,8 +12,8 @@ block content
 	// - var ntcp = ntcp;
 	- var bookdes = book.des;
 	- var comments = book.comments;
-	div.container-fluid
-		div.row(style="display: table; background-color: antiquewhite;")
+	div.container-fluid(style="padding-left:0px;padding-right:0px")
+		div(style="display: table; background-color: antiquewhite;width:100%")
 			div.col-xs-2(style="float: none;display: table-cell;vertical-align: middle;")
 				img.img-responsive(src= bookcoverimg )
 			div.col-xs-10(style="float: none;display: table-cell;vertical-align: middle;")
@@ -25,8 +25,18 @@ block content
 				h5(style="margin-top:5px;margin-bottom:5px;") 作者:#{authorname}
 				h6(style="margin-top:5px;margin-bottom:5px;") 更新:
 					span.text-primary(style="margin-left:10px;") #{publishedupdate_at}
-		h6 最新:
-			span.text-primary(style="margin-left:10px;") #{ntcp}
+		a(href= latestchapter>=0 ? "/readarticle/"+book._id+"/"+latestchapter+"/"+fontsize : "")
+			h6(style="margin-left:15px") 最新:
+				span.text-primary(style="margin-left:10px;max-width:70%;overflow: hidden;max-height: 20px;") #{ntcp}
+		div(style="display: table;width: 100%; padding-top:10px; padding-bottom:10px;background-color:#edd")
+			div.col-xs-6.text-center(style="float: none;display: table-cell;vertical-align: middle;")
+				a(href= "/recommend/"+book._id+"/"+bookname+"/0/"+book.alltickets)
+					div #{book.alltickets}
+					small 推薦票
+			div.col-xs-6.text-center(style="float: none;display: table-cell;vertical-align: middle;")
+				a
+					div #{book.allclicks}
+					small 點擊
 		div(style="display: table;width: 100%; padding-top:10px; padding-bottom:10px;")
 			div.col-xs-6(style="float: none;display: table-cell;vertical-align: middle;")
 				a(href= ntcp ? "/readarticle/"+book._id+"/"+firstchapter+"/"+fontsize : "")
@@ -37,6 +47,9 @@ block content
 	div.panel.panel-default
 		div.panel-heading 簡介
 		div.panel-body(style="white-space: pre-wrap;") #{bookdes}
+		a(href="/listchapters/"+book._id+"/0")
+			div.panel-footer 目錄
+				span.pull-right(style="margin-left:10px;max-width:50%;overflow: hidden;max-height: 20px;") 最新:#{ntcp}
 
 	div.panel.panel-default
 		div.panel-heading 書評
@@ -45,3 +58,17 @@ block content
 		// -	var comment = comments[i];
 		//	include ./commentlistitem
 		// - }
+
+	div.container-fluid(style="background-color:#eee; margin-bottom:1px")
+		div(style="display: table;width:100%")
+			div.col-xs-2(style="float: none;display: table-cell;vertical-align: middle;background-color: #ddd;")
+				img(src="/images/user_photo_default.png" style="width:100%;")
+			div.col-xs-10(style="float: none;display: table-cell;vertical-align: middle;")
+				a(href="/readauthor/"+bookauthor._id)
+					h4 #{bookauthor.penname}
+						small(style="margin-left:10px") 作品 #{bookauthor.books.length} 部
+				p 著有:
+					- for (var i=0;i<book.authorID.books.length;i++){
+						span(style="margin-left:10px").text-danger #{bookauthor.books[i].name}
+					- }
+		

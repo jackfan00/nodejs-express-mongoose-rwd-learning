@@ -12,28 +12,28 @@ block content
 	div(class="container-fluid" style="padding-top:10px;padding-bottom:10px;background-color:#eef")
 		div.row
 			div.col-xs-4
-				a.btn.btn-default(href="/recommendvote/"+bookid+"/1" style="width:100%;" disabled= tickets>0 ? false : true)
+				a.btn.btn-default(href= tickets>0 ? "/recommendvote/"+bookid+"/1":"" style="width:100%;" disabled= tickets>0 ? false : true)
 					h4 1
 					h4 推薦票
 			div.col-xs-4
-				a.btn.btn-default(href="/recommendvote/"+bookid+"/2" style="width:100%;" disabled= tickets>1 ? false : true)
+				a.btn.btn-default(href= tickets>1 ?"/recommendvote/"+bookid+"/2":"" style="width:100%;" disabled= tickets>1 ? false : true)
 					h4 2
 					h4 推薦票
 			div.col-xs-4
-				a.btn.btn-default(href="/recommendvote/"+bookid+"/3" style="width:100%;" disabled= tickets>2 ? false : true)
+				a.btn.btn-default(href= tickets>2 ? "/recommendvote/"+bookid+"/3":"" style="width:100%;" disabled= tickets>2 ? false : true)
 					h4 3
 					h4 推薦票
 		div.row(style="margin-top:10px;")
 			div.col-xs-4
-				a.btn.btn-default(href="/recommendvote/"+bookid+"/4" style="width:100%;" disabled= tickets>3 ? false : true)
+				a.btn.btn-default(href= tickets>3 ? "/recommendvote/"+bookid+"/4":"" style="width:100%;" disabled= tickets>3 ? false : true)
 					h4 4
 					h4 推薦票
 			div.col-xs-4
-				a.btn.btn-default(href="/recommendvote/"+bookid+"/5" style="width:100%;" disabled= tickets>4 ? false : true)
+				a.btn.btn-default(href= tickets>4 ? "/recommendvote/"+bookid+"/5":"" style="width:100%;" disabled= tickets>4 ? false : true)
 					h4 5
 					h4 推薦票
 			div.col-xs-4
-				a.btn.btn-default(href="/recommendvote/"+bookid+"/-1" style="width:100%;" disabled= tickets>0 ? false : true)
+				a.btn.btn-default(href= tickets>0 ? "/recommendvote/"+bookid+"/-1":"" style="width:100%;" disabled= tickets>0 ? false : true)
 					h4 全部
 					h4 推薦票
 		div.row(style="margin-top:10px;")

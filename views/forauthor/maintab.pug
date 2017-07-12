@@ -1,14 +1,14 @@
 div(class="container-fluid" style="background-color:#fff;margin-top:2px")
 	div(style="display: table;width: 100%; padding-top:15px;padding-bottom:15px")
 		- if (mode == "bookinfo") {
-			a.btn.btn-default(href="/author/editbook/"+book._id style="width:50%") 作品資訊
+			a.btn.btn-warning(href="/author/editbook/"+book._id style="width:50%") 作品資訊
 		- }	
 		- else {
 			a.btn.btn-default(href="/author/editbook/"+book._id style="width:50%") 作品資訊
 		- }
 
 		- if (mode == "published") {
-			a.btn.btn-default(href="/author/article/published/"+book._id+"/1" style="width:50%") 已發布章節
+			a.btn.btn-warning(href="/author/article/published/"+book._id+"/1" style="width:50%") 已發布章節
 		- }	
 		- else {
 			a.btn.btn-default(href="/author/article/published/"+book._id+"/1" style="width:50%") 已發布章節
@@ -16,14 +16,14 @@ div(class="container-fluid" style="background-color:#fff;margin-top:2px")
 
 	div(style="display: table;width: 100%; padding-top:0px;padding-bottom:15px")
 		- if (mode == "writing") {
-			a.btn.btn-default(href="/author/article/writing/"+book._id+"/1" style="width:50%") 草稿區
+			a.btn.btn-warning(href="/author/article/writing/"+book._id+"/1" style="width:50%") 草稿區
 		- }
 		- else {
 			a.btn.btn-default(href="/author/article/writing/"+book._id+"/1" style="width:50%") 草稿區
 		- }
 
 		- if (mode == "deleted") {
-			a.btn.btn-default(href="/author/article/deleted/"+book._id+"/1" style="width:50%") 刪除章節回收區
+			a.btn.btn-warning(href="/author/article/deleted/"+book._id+"/1" style="width:50%") 刪除章節回收區
 		- }
 		- else {
 			a.btn.btn-default(href="/author/article/deleted/"+book._id+"/1" style="width:50%") 刪除章節回收區

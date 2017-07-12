@@ -35,7 +35,7 @@ var peoplereadsupdate = function(userid, bookid, callback){
 			}
 			//
 			if (found == -1){				
-				book.peoplereads.push(userid);
+				//book.peoplereads.push(userid);
 				bookupdate(userid, bookid, callback);
 			}
 			else{   //already in
