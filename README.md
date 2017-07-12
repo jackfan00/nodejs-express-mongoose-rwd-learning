@@ -28,22 +28,15 @@
 4. npm install mongoose --save (nodejs mongoDB driver)  
 
 5. 程式功能解說:
-          
-          
-          - 中文小說網站 
-          
-          - 提供作家自由上傳作品 
-          
-          - 書籍排行分類: 點擊 推薦 收藏 新書 更新 
-          
-          - 讀者功能:書架收藏 閱讀紀錄 書籍推薦投票 書籍評論 
-          
-          - 版面安排:手機閱讀優先 閱讀字體大小自由調整 
-          
+
+          - 中文小說網站 
+          - 提供作家自由上傳作品 
+          - 書籍排行分類: 點擊 推薦 收藏 新書 更新 
+          - 讀者功能:書架收藏 閱讀紀錄 書籍推薦投票 書籍評論 
+          - 版面安排:手機閱讀優先 閱讀字體大小自由調整 
 
 6. 程式碼:
 
-          - routes/index.js, views/*.pug: 主要網站功能
-          
-          - routes/author.js, views/forauthor/*.pug: 作家相關網站功能
+          - routes/index.js, views/*.pug: 主要網站功能
+          - routes/author.js, views/forauthor/*.pug: 作家相關網站功能
           
