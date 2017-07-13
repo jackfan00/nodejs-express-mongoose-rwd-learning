@@ -22,7 +22,7 @@
           - express --view=pug myapp
           - cd myapp
           - npm install (install dependence in the package.json)
-          - DEBUG=myapp:* npm start
+          - DEBUG=myapp:* npm start (set DEBUG=myapp:* & npm start  -- window command)
           - check http://localhost:3000
   
 4. npm install mongoose --save (nodejs mongoDB driver)  
