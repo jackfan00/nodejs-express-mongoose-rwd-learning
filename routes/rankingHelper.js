@@ -156,5 +156,5 @@ var rank = function(req, callback){
 	}
 
 };	
-module.exports = clicksranking;
+module.exports = rank;
 	

@@ -20,15 +20,15 @@ div.panel.panel-default(style="margin-bottom: 0px;")
 	div.container-fluid(id="collapse"+id class="panel-collapse collapse" style="background-color:#eee;padding:0px")
 		a(href="/read/"+bookid)
 			div(style="display: table;width:100%")
-				div.col-xs-2(style="float: none;display: table-cell;vertical-align: middle;background-color: darkgray;")
-					img.img-responsive(src= bookcoverimg style="width:80%;")
-				div.col-xs-10(style="float: none;display: table-cell;vertical-align: middle;")
-					h4 #{bookname}
+				div.col-xs-2(style="float: none;display: table-cell;vertical-align: middle;background-color: darkgray;padding: 7px;")
+					img.img-responsive(src= bookcoverimg style="width:100%;")
+				div.col-xs-10(style="float: none;display: table-cell;vertical-align: middle;padding: 10px;")
+					h5(style="margin:0px") #{bookname}
 						span.badge.pull-right(style="margin-right:10px;") #{category}
 						span.badge.pull-right(style="margin-right:10px;") #{bookstatus}
 						// span.badge.pull-right(style="margin-right:10px;") #{bookwordcount}字
 					blockquote.blockquote-reverse(style="margin: 0 0 0px;border-right: 0px;padding:0px")
-						h5.text-muted(style="white-space: pre-wrap;font-size: 14px;max-height:44px;overflow:hidden;margin: 0px;") #{bookdes}
-						footer(style="font-size:100%;color:#000") #{authorname}
+						h6.text-muted(style="white-space: pre-wrap;max-height:25px;overflow:hidden;margin-top: 5px;margin-bottom: 5px;") #{bookdes}
+						footer(style="font-size:70%;color:#000") #{authorname}
 	
 	

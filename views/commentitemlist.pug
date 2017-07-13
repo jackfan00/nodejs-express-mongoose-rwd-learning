@@ -1,9 +1,9 @@
-div.container-fluid(style="background-color:#eee; margin-bottom:1px")
+div.container-fluid(style="background-color:#eee; margin-bottom:1px;padding:0px;")
 	// a(href="/read/"+bookid)
-	div(style="display: table;width:100%")
-		div.col-xs-2(style="float: none;display: table-cell;vertical-align: middle;background-color: darkgray;")
-			img.img-responsive(src= postuserimg style="width:100%;")
-		div.col-xs-10(style="float: none;display: table-cell;vertical-align: middle;")
-			p #{userdisplayname}
-			p #{commentdes}
-			small #{timeby}
+	div(style="display: table;width:100%;background-color: #eee;")
+		div.col-xs-2(style="float: none;display: table-cell;padding: 7px;")
+			img(src= postuserimg style="width:100%;")
+		div.col-xs-10(style="float: none;display: table-cell;vertical-align: middle;padding: 10px;")
+			p(style="margin:0px;color: #00a;") #{userdisplayname}
+			p(style="margin:0px;font-size:70%;color: black;") #{commentdes}
+			small.text-muted(style="margin:0px") #{timeby}

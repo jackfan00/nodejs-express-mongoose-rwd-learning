@@ -1,15 +1,15 @@
-div.container-fluid(style="background-color:#eee; margin-bottom:1px")
+div.container-fluid(style="background-color:#eee; margin-bottom:1px; padding: 0px")
 	a(href="/readarticle/"+bookid+"/"+readchapterindex+"/"+fontsize)
 		div(style="display: table;width:100%")
-			div.col-xs-2(style="float: none;display: table-cell;vertical-align: middle;background-color: darkgray;")
+			div.col-xs-2(style="float: none;display: table-cell;vertical-align: middle;background-color: darkgray;padding: 7px;")
 				img.img-responsive(src= bookcoverimg style="width:100%;")
-			div.col-xs-10(style="float: none;display: table-cell;vertical-align: middle;")
-				h4 #{bookname}
-					span.badge(style="margin-left:20px;") #{timeby} 更新
-				div(style="display: table;width:100%;margin-bottom:10px")
+			div.col-xs-10(style="float: none;display: table-cell;vertical-align: middle;padding: 10px;")
+				h4(style="margin:0px") #{bookname}
+					span.badge(style="margin-left:5px;color: red;border-radius: 7px;border-color: red;border-style: double;background-color: transparent;") #{timeby} 更新
+				div(style="display: table;width:100%;margin-bottom:0px")
 					span.text-muted #{authorname} ． 著
-					span.text-muted(style="margin-left:20px") #{readstatus}
-				p.text-muted 最新: #{newestchapter}
+					span.text-muted(style="margin-left:10px") #{readstatus}
+				p.text-muted(style="margin-bottom:0px") 最新: #{newestchapter}
 
 // old code				
 // div.container-fluid(style="background-color:#eee; margin-bottom:1px")

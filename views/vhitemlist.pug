@@ -1,9 +1,9 @@
-div.container-fluid(style="background-color:#eee; margin-bottom:1px")
+div.container-fluid(style="background-color:#eee; margin-bottom:1px;padding: 0px")
 	a(href="/read/"+bookid)
 		div(style="display: table;width:100%")
-			div.col-xs-2(style="float: none;display: table-cell;vertical-align: middle;background-color: darkgray;")
+			div.col-xs-2(style="float: none;display: table-cell;vertical-align: middle;background-color: darkgray;padding: 7px;")
 				img.img-responsive(src= bookcoverimg style="width:100%;")
-			div.col-xs-10(style="float: none;display: table-cell;vertical-align: middle;")
-				h4 #{bookname}
-				p.text-muted #{authorname} ． 著
-				small.text-muted #{timeby}
+			div.col-xs-10(style="float: none;display: table-cell;vertical-align: middle;padding: 10px;")
+				h4(style="margin:0px") #{bookname}
+				p.text-muted(style="margin:0px") #{authorname} ． 著
+				small.text-muted(style="margin:0px") #{timeby}
