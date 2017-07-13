@@ -9,6 +9,8 @@ var ArticleContentmodel = require('../models/articlecontent.js');
 var updatearticleHelper = require('./updatearticleHelper.js');
 var savenewarticleHelper = require('./savenewarticleHelper.js');
 var authorsignup2ndHelper = require('./authorsignup2ndHelper.js');
+var publishoneHelper = require('./publishoneHelper.js');
+var publishallHelper = require('./publishallHelper.js');
 
 var bcrypt = require('bcrypt-nodejs');
 var cats=["玄幻","奇幻","武俠","仙俠","都市","歷史","科幻","靈異","遊戲","運動","女生網"];
@@ -193,7 +195,7 @@ router.get('/article/:mode/:bookid/:articleid', function(req, res, next) {
 				res.send(err);
 			}
 			else if (book){
-				console.log("write article in book:"+book);
+				console.log("articleid :"+req.params.articleid);
 				
 				if (req.params.articleid && req.params.articleid.length>6){
 					Articlemodel
@@ -336,21 +338,15 @@ router.get('/deletearticle/:mode/:articleid/:bookid', function(req, res, next) {
 
 router.get('/publishonearticle/:articleid/:bookid/:wc', function(req, res, next) {
 	if (req.session.authoruser){
-			Articlemodel.update({ _id: req.params.articleid }, 
-			
-			{ $set: { mode: "published"}}, 
-			
-			function(err, raw){
-				
-				//
-				Bookmodel.update({ _id: req.params.bookid }, 
-				{ $set: { publishedupdate_at: new Date()}, $inc: {bookwordcount: req.params.wc}}, 
-				function(err, raw){
+			publishoneHelper(req, function(err, raw){
+				if (err){
+					console.log("publishone err");
+					res.send(err);
+				}
+				else{
 					console.log("publishonearticle:"+req.params.articleid);
 					res.redirect('/author/article/published/'+req.params.bookid+'/1');
-				});
-				
-				
+				}
 			});
 	}
 	else{
@@ -360,6 +356,17 @@ router.get('/publishonearticle/:articleid/:bookid/:wc', function(req, res, next)
 
 router.get('/publishAllarticle/:bookid', function(req, res, next) {
 	if (req.session.authoruser){
+		publishallHelper(req, function(err, raw){
+				if (err){
+					console.log("publishall err");
+					res.send(err);
+				}
+				else{
+					console.log("publishallarticle:"+req.params.bookid);
+					res.redirect('/author/article/published/'+req.params.bookid+'/1');
+				}
+			});
+		/*
 		Bookmodel
 		.findOne({ _id: req.params.bookid })
 		.populate('articles')
@@ -382,7 +389,7 @@ router.get('/publishAllarticle/:bookid', function(req, res, next) {
 								if (ops==0){
 									//
 									Bookmodel.update({ _id: req.params.bookid }, 
-									{ $set: { publishedupdate_at: new Date()}, $inc: {bookwordcount: wc}}, 
+									{ $set: { publishedupdate_at: new Date(), newestchapter: newestchapter}, $inc: {bookwordcount: wc}}, 
 									function(err2, raw2){
 										console.log("publishAllarticle:"+err2);
 										res.redirect('/author/article/published/'+req.params.bookid+'/1');
@@ -394,7 +401,7 @@ router.get('/publishAllarticle/:bookid', function(req, res, next) {
 					}
 				}
 				
-		});
+		});*/
 	}
 	else{
 		res.redirect('/author');
@@ -606,6 +613,7 @@ router.post('/createnewbook', function(req, res, next) {
 		newBook.category = req.body.category;
 		newBook.des = req.body.description;
 		newBook.authorID = req.session.authoruser._id;
+		newBook.authorname = req.session.authoruser.penname;
 		//newBook.authorname = req.session.user.penname;
 		//newBook.booknumber = randomstring.generate({length: 16, charset: 'numeric'});
 		newBook.save(function (err, book) {
@@ -640,7 +648,7 @@ router.post('/editbook', function(req, res, next) {
 	if (req.session.authoruser){
 			Bookmodel.update({ _id: req.body.bookid }, 
 			
-			{ $set: { category: req.body.category, des: req.body.description}}, 
+			{ $set: { category: req.body.category, des: req.body.description, authorname: req.session.authoruser.penname}}, 
 			
 			function(err, raw){
 				if (err){

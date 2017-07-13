@@ -7,16 +7,16 @@ var ArticleContentmodel = require('../models/articlecontent.js');
 
 
 
-var userupdate = function(userid, newviewhistory, callback ){
+var userupdate = function(userid, newviewhistory, newviewhistorydate, callback ){
 	console.log("newviewhistory::"+newviewhistory);
 	Usermodel.update({_id: userid},
-		{ $set: {viewhistory: newviewhistory}},
+		{ $set: {viewhistory: newviewhistory, viewhistorydate: newviewhistorydate}},
 		function(err, raw){
 			if (err){
 				return callback(err);
 			}
 			console.log("viewhistoryupdate success:"+JSON.stringify(raw))
-			callback(null,newviewhistory);
+			callback(null, newviewhistory, newviewhistorydate);
 		});
 };
 
@@ -27,7 +27,7 @@ var viewhistoryupdate = function(userid, bookid, callback){
 				return callback(err);
 			}
 			var found = -1;
-			var newviewhistory=[];
+			var newviewhistory=[], newviewhistorydate=[];
 			//
 			console.log("user.viewhistory:"+user.viewhistory);
 			for (var i=0;i<user.viewhistory.length;i++){
@@ -38,30 +38,35 @@ var viewhistoryupdate = function(userid, bookid, callback){
 			}
 			//
 			if (found == -1){
-				var newviewhistory=[];
+				//var newviewhistory=[], newviewhistorydate=[];
 				if (user.viewhistory.length>=20){ 
 					for (var i=1;i<user.viewhistory.length;i++){  //remove oldest one
 						newviewhistory.push(user.viewhistory[i]);
+						newviewhistorydate.push(user.viewhistorydate[i]);
 					}
 					newviewhistory.push(bookid);   //add new one
-					userupdate(userid, newviewhistory, callback);
+					newviewhistorydate.push(new Date());   //add new one
+					userupdate(userid, newviewhistory, newviewhistorydate, callback);
 				}
 				else{
 					user.viewhistory.push(bookid);
-					userupdate(userid, user.viewhistory, callback);
+					user.viewhistorydate.push(new Date());
+					userupdate(userid, user.viewhistory, user.viewhistorydate, callback);
 				}
 				
 				
 			}
 			else{   //move found one to newest
-				var newviewhistory=[];
+				//var newviewhistory=[], newviewhistorydate=[];
 				for (var i=0;i<user.viewhistory.length;i++){
 					if (i != found){
 						newviewhistory.push(user.viewhistory[i]);
+						newviewhistorydate.push(user.viewhistorydate[i]);
 					}
 				}
 				newviewhistory.push(bookid);   //add new one
-				userupdate(userid, newviewhistory, callback);
+				newviewhistorydate.push(new Date());   //add new one
+				userupdate(userid, newviewhistory, newviewhistorydate, callback);
 			}
 			
 		});

@@ -38,7 +38,7 @@ var addmybook = function(userid, bookid, callback ){
 			}
 			else{
 				Usermodel.update({_id: userid},
-					{$push: {mybooks: bookid}},
+					{$push: {mybooks: bookid, mybooksreadstatus: 0}},
 					function(err, raw){
 						if (err){
 							return callback(err);

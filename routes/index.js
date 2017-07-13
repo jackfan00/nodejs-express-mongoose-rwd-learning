@@ -122,7 +122,7 @@ router.get('/signout', function(req, res, next) {
 router.get('/clearmybooks', function(req, res, next) {
 	if (req.session && req.session.user){
 		Usermodel
-		.update({_id: req.session.user._id}, {$set: {mybooks: []}},
+		.update({_id: req.session.user._id}, {$set: {mybooks: [], mybooksreadstatus: []}},
 		
 		function(err, raw){
 			if (err){
@@ -141,7 +141,8 @@ router.get('/clearmybooks', function(req, res, next) {
 });
 
 router.get('/mybookindex/:state', function(req, res, next) {
-	req.session.forward = "/mybookindex";
+	req.session.forward = "/mybookindex/0";
+	var fontsize = req.session && req.session.fontsize ? req.session.fontsize : "15px";
 	if (req.session && req.session.user){
 		Usermodel
 		.findOne({_id: req.session.user._id})
@@ -160,8 +161,10 @@ router.get('/mybookindex/:state', function(req, res, next) {
 					message="已經超過書架最大容量";
 				}
 				
+				mybooksreadstatus = user.mybooksreadstatus;
 					
-				res.render('mybookindex',{ message: message, mybook_books: user.mybooks, penname: user.author.penname, cats: cats});
+				res.render('mybookindex',{ message: message, mybook_books: user.mybooks, fontsize: fontsize,
+				mybooksreadstatus: mybooksreadstatus,  cats: cats});
 			}
 		});
 		
@@ -233,6 +236,28 @@ router.get('/listchapters/:bookid/:order', function(req, res, next) {
 	});
 });
 
+router.get('/clearreadinghistory', function(req, res, next) {
+	if (req.session && req.session.user){
+		Usermodel
+		.update({_id: req.session.user._id},
+			{$set: {viewhistory: [], viewhistorydate: []}},
+		function(err, raw){
+			if (err){
+				res.send(err);
+			}
+			else{
+				//console.log("user:"+user);
+				req.session.user.viewhistory= [];
+				req.session.user.viewhistorydate= [];
+				res.render('viewhistoryindex',{ viewhistory_books: req.session.user.viewhistory, penname: req.session.user.author.penname, 
+				viewhistorydate: req.session.user.viewhistorydate, cats: cats});
+			}
+		});
+	}
+	else{		
+		res.redirect('/signin');
+	}	
+});
 
 router.get('/myreadinghistory', function(req, res, next) {
 	
@@ -248,7 +273,8 @@ router.get('/myreadinghistory', function(req, res, next) {
 			}
 			else{
 				console.log("user:"+user);
-				res.render('viewhistoryindex',{ viewhistory_books: user.viewhistory, penname: user.author.penname, cats: cats});
+				res.render('viewhistoryindex',{ viewhistory_books: user.viewhistory,  
+				viewhistorydate: user.viewhistorydate, cats: cats});
 			}
 		});
 		
@@ -323,27 +349,28 @@ router.get('/readarticle/:bookid/:chapter/:fontsize', function(req, res, next) {
 	//update viewhistory
 	if (req.session && req.session.user){
 		viewhistoryupdateHelper(req.session.user._id, req.params.bookid,
-		function(err, newviewhistory){
+		function(err, newviewhistory, newviewhistorydate){
 			if (err){
 				res.send(err);
 			}
 			console.log("viewhistory update:"+newviewhistory);
 			req.session.user.viewhistory = newviewhistory;
+			req.session.user.viewhistorydate = newviewhistorydate;
 		});
 	}
 
-	/*
-	//update peoplereads
+	
+	//update mybooksreadstatus
 	if (req.session && req.session.user){
-		peoplereadsupdateHelper(req.session.user._id, req.params.bookid,
+		peoplereadsupdateHelper(req.params.chapter, req.session.user._id, req.params.bookid,
 		function(err, state){
 			if (err){
 				res.send(err);
 			}
 			
-			console.log("peoplereads update state:"+state);
+			console.log("mybooksreadstatus update state:"+state);
 		});
-	}*/
+	}
 	
 	
 	// update clicks

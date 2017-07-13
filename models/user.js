@@ -12,10 +12,11 @@ var UserSchema = new Schema(
     birth_day:       { type: Number },
 	gender:       { type: Number },
     mybooks:     [{ type: Schema.ObjectId, ref: 'Book' }],
-    booksreadstatus: [{ type: Number }],
+    mybooksreadstatus: [{ type: Number }],
     coins:     { type: Number, default: 5000 },
     tickets:   { type: Number, default: 10 },
     viewhistory: [{ type: Schema.ObjectId, ref: 'Book' }],
+	viewhistorydate: [{type: Date}],
     author:    { type: Schema.ObjectId, ref: 'Author' },
     create_at: { type: Date, default: Date.now }
 

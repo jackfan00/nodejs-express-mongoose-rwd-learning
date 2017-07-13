@@ -1,4 +1,18 @@
 div.container-fluid(style="background-color:#eee; margin-bottom:1px")
+	a(href="/readarticle/"+bookid+"/"+readchapterindex+"/"+fontsize)
+		div(style="display: table;width:100%")
+			div.col-xs-2(style="float: none;display: table-cell;vertical-align: middle;background-color: darkgray;")
+				img.img-responsive(src= bookcoverimg style="width:100%;")
+			div.col-xs-10(style="float: none;display: table-cell;vertical-align: middle;")
+				h4 #{bookname}
+					span.badge(style="margin-left:20px;") #{timeby} 更新
+				div(style="display: table;width:100%;margin-bottom:10px")
+					span.text-muted #{authorname} ． 著
+					span.text-muted(style="margin-left:20px") #{readstatus}
+				p.text-muted 最新: #{newestchapter}
+
+// old code				
+// div.container-fluid(style="background-color:#eee; margin-bottom:1px")
 	a(href="/read/"+bookid)
 		div.row(style="display: table;width:100%")
 			div.col-xs-3(style="float: none;display: table-cell;vertical-align: middle;background-color: darkgray;")
