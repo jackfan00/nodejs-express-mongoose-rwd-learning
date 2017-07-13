@@ -1,0 +1,18 @@
+extends layout
+
+block content
+	include ./menubar1
+	div.container-fluid(style="padding:0px")
+		form(action="/postcomment" method="post")
+			input(type="hidden" name="bookid" value= book._id)
+			input(type="hidden" name="bookname" value= book.name)
+			div(style="display: table;width: 100%;padding:15px;padding-bottom:15px;background-color:#eee")
+				div.col-xs-6(style="float: none;display: table-cell;vertical-align: middle;padding:0px;")
+					h4.panel-title(style="overflow:hidden;max-height:17px") 發表評論				
+				div.col-xs-6(style="float: none;display: table-cell;vertical-align: middle;padding:0px")
+					button.btn.btn-default.pull-right(type="submit") 發表
+			textarea.form-control(type="text" name="des" rows="20" required="required" placeholder="寫點東西")
+				
+
+							
+		

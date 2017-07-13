@@ -52,12 +52,9 @@ block content
 				span.pull-right(style="margin-left:10px;max-width:50%;overflow: hidden;max-height: 20px;") 最新:#{ntcp}
 
 	div.panel.panel-default
-		div.panel-heading 書評
-		div.panel-body
-		// - for (var i=0;i<comments.length,i++){
-		// -	var comment = comments[i];
-		//	include ./commentlistitem
-		// - }
+		a(href="/getcomment/"+book._id+"/"+bookname)
+			div.panel-heading 書評
+				span.pull-right(style="margin-left:10px;max-width:50%;overflow: hidden;max-height: 20px;") #{commentnum} 則評論 >
 
 	div.container-fluid(style="background-color:#eee; margin-bottom:1px")
 		div(style="display: table;width:100%")

@@ -4,6 +4,28 @@ var Authormodel = require('../models/author.js');
 var Articlemodel = require('../models/article.js');
 var ArticleContentmodel = require('../models/articlecontent.js');
 
+
+var allbooksnum = function(req, allclicks_books, alltickets_books, newbooks_books, newupdate_books, collect_books, callback){
+	Bookmodel.find()
+	.populate('authorID')
+	.exec(function(err, all_books){
+		if (err){
+			console.log("collectranking err="+err);
+			return callback(err);
+		}
+		var sliced_allbooksnum= 0;
+		for (var i=0;i<all_books.length;i++){
+			if (all_books[i].authorID){
+				sliced_allbooksnum++;
+			}
+		}
+
+		callback(null, allclicks_books, alltickets_books, newbooks_books, newupdate_books, collect_books,sliced_allbooksnum );
+		
+	});
+};	
+
+
 var collectranking = function(req, allclicks_books, alltickets_books, newbooks_books, newupdate_books, callback){
 	Bookmodel.find()
 	.limit(20)
@@ -25,7 +47,7 @@ var collectranking = function(req, allclicks_books, alltickets_books, newbooks_b
 			}
 		}
 
-		callback(null, allclicks_books, alltickets_books, newbooks_books, newupdate_books, sliced_collect_books );
+		allbooksnum(req, allclicks_books, alltickets_books, newbooks_books, newupdate_books, sliced_collect_books, callback );
 		
 	});
 };	

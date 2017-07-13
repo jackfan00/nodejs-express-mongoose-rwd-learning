@@ -1,0 +1,44 @@
+extends layout
+
+block content
+	include ./menubar1
+	div.bg-primary.container-fluid(style="padding-top:10px;padding-bottom:10px;")
+		div(style="display: table;width: 100%;padding-top:15px;padding-bottom:15px")
+			div.col-xs-3(style="float: none;display: table-cell;vertical-align: middle;")
+				a(href= backurl)
+					button 返回
+			div.col-xs-6.text-center(style="float: none;display: table-cell;vertical-align: middle;") #{bookname}
+				 
+			div.col-xs-3(style="float: none;display: table-cell;vertical-align: middle;")
+				a(href="/")
+					button.pull-right 首頁
+	// - if (user){
+	div.panel.panel-default(style="margin-bottom: 0px;")
+		div.container-fluid
+			div.panel-heading.text-center(style="display: table;width: 100%; margin:0px;")
+				a.btn.btn-default(href="/postcomment/"+bookid) 發表評論
+					span.glyphicon.glyphicon-pencil(style="margin-left:10px")
+	// - }		
+	- for (var i=0;i<comments.length;i++){
+		- var postuserimg = comments[i].user.headimg;
+		- var userdisplayname = comments[i].user.displayname;
+		- var commentdes = comments[i].des;
+		- month = new Date().getMonth() - comments[i].create_at.getMonth();
+		- day = new Date().getDate() - comments[i].create_at.getDate();
+		- hour = new Date().getHours() - comments[i].create_at.getHours();
+		- minute = new Date().getMinutes() - comments[i].create_at.getMinutes();
+		- var timeby="1分鐘前";
+		- if (month!=0){
+		-	timeby = month+"月前";
+		- }
+		- else if (day !=0){
+		-	timeby = day+"天前";
+		- }
+		- else if (hour !=0){
+		-	timeby = hour+"小時前";
+		- }
+		- else if (minute !=0){
+		-	timeby = minute+"分鐘前";
+		- }
+		include ./commentitemlist
+	- }

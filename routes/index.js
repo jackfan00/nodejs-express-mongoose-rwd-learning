@@ -22,12 +22,12 @@ var cats=["玄幻","奇幻","武俠","仙俠","都市","歷史","科幻","靈異
 router.get('/', function(req, res, next) {
 	
 	var user = req.session && req.session.user ? req.session.user : null;
-	allrankingHelper(req, function(err, allclicks_books, alltickets_books, newbooks_books, newupdate_books, collect_books){
+	allrankingHelper(req, function(err, allclicks_books, alltickets_books, newbooks_books, newupdate_books, collect_books, allbooksnum){
 		if (err){
 			res.send(err);
 		}
 		else{
-			res.render('index', { allclicks_books: allclicks_books, alltickets_books: alltickets_books,
+			res.render('index', { allclicks_books: allclicks_books, alltickets_books: alltickets_books, allbooksnum: allbooksnum,
 			newbooks_books: newbooks_books, newupdate_books: newupdate_books, collect_books: collect_books,
 			cats: cats, user: user });
 		}
@@ -51,9 +51,58 @@ router.get('/list100/:rank', function(req, res, next) {
 				cats: cats, user: user });
 		}
 	});
-	
-  
 });
+
+router.get('/getcomment/:bookid/:bookname', function(req, res, next) {
+	
+	//if (req.session && req.session.user){
+		Commentmodel.find({book: req.params.bookid})
+		.limit(5)
+		.sort('-create_at')
+		.populate('book user')
+		.exec(function(err,comments){
+			if (err){
+				console.log("發表評論發生錯誤-getcomment-");
+				res.send(err);
+			}
+			else {
+				console.log("comments:"+comments);
+				res.render('commentindex', {user: req.session.user, bookname: req.params.bookname, backurl: "/read/"+req.params.bookid,
+				bookid: req.params.bookid, comments: comments});
+			}
+		});
+		
+	//}
+	//else{
+	//	res.redirect('/');
+	//}
+	
+});
+
+router.get('/postcomment/:bookid', function(req, res, next) {
+	
+	if (req.session && req.session.user){
+		Bookmodel.findOne({_id: req.params.bookid})
+		
+		.exec(function(err,book){
+			if (err){
+				console.log("發表評論發生錯誤-postcomment-");
+				res.send(err);
+			}
+			else {
+				console.log("book:"+book);
+				res.render('postcomment', {user: req.session.user, book: book, 
+					backurl: "/getcomment/"+req.params.bookid+"/"+book.name});
+			}
+		});
+		
+	}
+	else{
+		res.redirect('/signin');
+	}
+	
+});
+
 
 router.get('/signin', function(req, res, next) {
 	
@@ -253,7 +302,8 @@ router.get('/read/:bookid', function(req, res, next) {
 					res.send(err);
 				}
 				else{
-					res.render('readbookindex', { book: book, bookauthor: bookauthor, fontsize: fontsize, user: user, cats: cats, ntcp: ntcp, firstchapter: firstchapter, latestchapter: latestchapter});
+					res.render('readbookindex', { book: book, bookauthor: bookauthor, fontsize: fontsize, commentnum: book.comments.length,
+					user: user, cats: cats, ntcp: ntcp, firstchapter: firstchapter, latestchapter: latestchapter});
 				}
 			});
 			//if (req.session && req.session.user){
@@ -519,6 +569,40 @@ router.post('/signup', function(req, res, next)
 
 	}
 	//res.send(req.body);
+});
+
+router.post('/postcomment', function(req, res, next) {
+	if (req.session && req.session.user){
+				var newComment = new Commentmodel();
+				newComment.user = req.session.user._id;
+				newComment.book = req.body.bookid;
+				newComment.des = req.body.des;
+				bookname = req.body.bookname;
+				//
+				newComment.save(function (err, comment) {
+					if (err) {
+						console.log("new comment save err");
+						res.send(err);
+					}
+					else {
+						console.log("comment saved");
+						Bookmodel.update({_id: comment.book},
+							{$push: {comments: comment}},
+							function(err,raw){
+								if (err){
+									res.send(err);
+								}
+								else{
+									res.redirect('/getcomment/'+comment.book+'/'+bookname);
+								}
+							});
+						
+					}
+				});
+	}
+	else{
+		res.redirect('/signin');
+	}	
 });
 
 module.exports = router;

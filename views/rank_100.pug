@@ -1,7 +1,7 @@
 
 div.list-group
 	div(class="list-group-item list-group-item-info") #{itemname}
-		// a.pull-right(href="/list100/1") 更多..
+		a.pull-right(href="/") 返回..
 	- for (var i=0;i<rank_books.length; i++){
 	- 	var category = cats[rank_books[i].category];
 	- 	var bookname = rank_books[i].name;
