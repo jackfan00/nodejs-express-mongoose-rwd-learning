@@ -211,7 +211,7 @@ router.get('/article/:mode/:bookid/:articleid', function(req, res, next) {
 					});
 				}
 				else{
-					res.render('forauthor/articleAll', {authorlogined: true, user: req.session.user, book: book, mode: mode });
+					res.render('forauthor/articleAll', {authorlogined: true, article: null, user: req.session.user, book: book, mode: mode });
 					
 				}
 				
