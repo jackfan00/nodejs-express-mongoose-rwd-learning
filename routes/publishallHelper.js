@@ -5,8 +5,8 @@ var Articlemodel = require('../models/article.js');
 var ArticleContentmodel = require('../models/articlecontent.js');
 
 
-var bookupdate = function(newestchapter, req, wc, callback){
-				Bookmodel.update({ _id: req.params.bookid }, 
+var bookupdate = function(newestchapter, bookid, wc, callback){
+				Bookmodel.update({ _id: bookid }, 
 				{ $set: { publishedupdate_at: new Date(), newestchapter: newestchapter}, $inc: {bookwordcount: wc}}, 
 				function(err, raw){
 					if (err){
@@ -18,8 +18,9 @@ var bookupdate = function(newestchapter, req, wc, callback){
 
 };
 var publishall = function(req, callback){
+	var bookid = req.params.bookid;
 		Bookmodel
-		.findOne({ _id: req.params.bookid })
+		.findOne({ _id: bookid })
 		.populate('articles')
 		.exec( function(err, book){
 				if (err){return callback(err);}
@@ -56,7 +57,7 @@ var publishall = function(req, callback){
 									article	= book.articles[found];
 									newestchapter_des = "第 "+article.chapternumber+" 章  "+article.chaptername;
 									//
-									bookupdate({des:newestchapter_des, index: newestchapter_index}, req, wc, callback);
+									bookupdate({des:newestchapter_des, index: newestchapter_index}, bookid, wc, callback);
 									
 								}
 						});

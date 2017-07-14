@@ -1,7 +1,7 @@
 div.container-fluid(style="background-color:#eee; margin-bottom:1px; padding: 0px")
 	a(href="/readarticle/"+bookid+"/"+readchapterindex+"/"+fontsize)
 		div(style="display: table;width:100%")
-			div.col-xs-2(style="float: none;display: table-cell;vertical-align: middle;background-color: darkgray;padding: 7px;")
+			div.col-xs-2(style="float: none;display: table-cell;vertical-align: middle;padding: 7px;")
 				img.img-responsive(src= bookcoverimg style="width:100%;")
 			div.col-xs-10(style="float: none;display: table-cell;vertical-align: middle;padding: 10px;")
 				h4(style="margin:0px") #{bookname}
@@ -9,10 +9,12 @@ div.container-fluid(style="background-color:#eee; margin-bottom:1px; padding: 0p
 				div(style="display: table;width:100%;margin-bottom:0px")
 					span.text-muted #{authorname} ． 著
 					span.text-muted(style="margin-left:10px") #{readstatus}
+					a(href="/delmybook/"+bookid)
+						button.pull-right.btn-danger x
 				p.text-muted(style="margin-bottom:0px") 最新: #{newestchapter}
 
-// old code				
-// div.container-fluid(style="background-color:#eee; margin-bottom:1px")
+//- old code				
+//- div.container-fluid(style="background-color:#eee; margin-bottom:1px")
 	a(href="/read/"+bookid)
 		div.row(style="display: table;width:100%")
 			div.col-xs-3(style="float: none;display: table-cell;vertical-align: middle;background-color: darkgray;")

@@ -19,12 +19,13 @@ var AuthormodelSave = function(req, callback){
 	var newAuthor = new Authormodel();
 	newAuthor.penname = req.body.penname;
 	newAuthor.password = bcrypt.hashSync(req.body.authorpassword);
+	var userid = req.body.userid;
 	newAuthor.save(function (err, auuser) {
 		if (err){
 			return callback(err);
 		}
 		console.log("AuthormodelSave success");
-		Usermodelupdate(req, req.body.userid, auuser._id, callback);
+		Usermodelupdate(req, userid, auuser._id, callback);
 	});
 
 };

@@ -8,6 +8,8 @@ var allrankingHelper = require('./allrankingHelper.js');
 var rankingHelper = require('./rankingHelper.js');
 var addmybookHelper = require('./addmybookHelper.js');
 var peoplereadsupdateHelper = require('./peoplereadsupdateHelper.js');
+var searchbookHelper = require('./searchbookHelper.js');
+var delmybookHelper = require('./delmybookHelper.js');
 
 //
 var Bookmodel = require('../models/book.js');
@@ -36,9 +38,25 @@ router.get('/', function(req, res, next) {
   
 });
 
+router.post('/searchbook', function(req, res, next) {
+	
+	var user = req.session && req.session.user ? req.session.user : null;
+	searchbookHelper(req, function(err, books){
+		if (err){
+			res.send(err);
+		}
+		else{
+			res.render('searchbookindex', {user: user, mybook_books: books, cats: cats});
+		}
+	});
+	
+});
+
+
 router.get('/list100/:rank', function(req, res, next) {
 	
 	var user = req.session && req.session.user ? req.session.user : null;
+	var rank = req.params.rank;
 	rankingHelper(req, function(err, rank_books){
 		if (err){
 			res.send(err);
@@ -46,8 +64,8 @@ router.get('/list100/:rank', function(req, res, next) {
 		else{
 			itemname = ["點擊排行","推薦排行","收藏排行","新書上架","最近更新"];
 			itemdes = ["點擊","推薦","收藏","",""];
-			res.render('list100', { rank_books: rank_books, rank: req.params.rank, 
-				itemdes: itemdes[req.params.rank], itemname: itemname[req.params.rank],
+			res.render('list100', { rank_books: rank_books, rank: rank, 
+				itemdes: itemdes[rank], itemname: itemname[rank],
 				cats: cats, user: user });
 		}
 	});
@@ -56,6 +74,8 @@ router.get('/list100/:rank', function(req, res, next) {
 router.get('/getcomment/:bookid/:bookname', function(req, res, next) {
 	
 	//if (req.session && req.session.user){
+		var bookid = req.params.bookid;
+		var bookname = req.params.bookname;
 		Commentmodel.find({book: req.params.bookid})
 		.limit(5)
 		.sort('-create_at')
@@ -67,8 +87,8 @@ router.get('/getcomment/:bookid/:bookname', function(req, res, next) {
 			}
 			else {
 				console.log("comments:"+comments);
-				res.render('commentindex', {user: req.session.user, bookname: req.params.bookname, backurl: "/read/"+req.params.bookid,
-				bookid: req.params.bookid, comments: comments});
+				res.render('commentindex', {user: req.session.user, bookname: bookname, backurl: "/read/"+bookid,
+				bookid: bookid, comments: comments});
 			}
 		});
 		
@@ -82,7 +102,8 @@ router.get('/getcomment/:bookid/:bookname', function(req, res, next) {
 router.get('/postcomment/:bookid', function(req, res, next) {
 	
 	if (req.session && req.session.user){
-		Bookmodel.findOne({_id: req.params.bookid})
+		var bookid = req.params.bookid;
+		Bookmodel.findOne({_id: bookid})
 		
 		.exec(function(err,book){
 			if (err){
@@ -92,7 +113,7 @@ router.get('/postcomment/:bookid', function(req, res, next) {
 			else {
 				console.log("book:"+book);
 				res.render('postcomment', {user: req.session.user, book: book, 
-					backurl: "/getcomment/"+req.params.bookid+"/"+book.name});
+					backurl: "/getcomment/"+bookid+"/"+book.name});
 			}
 		});
 		
@@ -119,6 +140,23 @@ router.get('/signout', function(req, res, next) {
 	res.redirect('/');
 });
 
+router.get('/delmybook/:bookid', function(req, res, next) {
+	if (req.session && req.session.user){
+		delmybookHelper(req, function(err){
+			if (err){
+				res.send(err);
+			}
+			else{
+				res.redirect('/mybookindex/0');
+			}
+		});
+		
+	}
+	else{
+		res.redirect('/signin');
+	}
+});
+
 router.get('/clearmybooks', function(req, res, next) {
 	if (req.session && req.session.user){
 		Usermodel
@@ -130,7 +168,7 @@ router.get('/clearmybooks', function(req, res, next) {
 			}
 			else{
 				console.log("clearmybooks:"+JSON.stringify(raw));
-				res.redirect('mybookindex/0');
+				res.redirect('/mybookindex/0');
 			}
 		});
 		
@@ -144,6 +182,7 @@ router.get('/mybookindex/:state', function(req, res, next) {
 	req.session.forward = "/mybookindex/0";
 	var fontsize = req.session && req.session.fontsize ? req.session.fontsize : "15px";
 	if (req.session && req.session.user){
+		var state = req.params.state;
 		Usermodel
 		.findOne({_id: req.session.user._id})
 		.populate('mybooks author')
@@ -154,10 +193,10 @@ router.get('/mybookindex/:state', function(req, res, next) {
 			else{
 				console.log("mybookindex user:"+user);
 				var message=null;
-				if (req.params.state==-1){
+				if (state==-1){
 					message="已經在書架上";
 				}
-				else if (req.params.state==-2){
+				else if (state==-2){
 					message="已經超過書架最大容量";
 				}
 				
@@ -195,7 +234,7 @@ router.get('/addmybook/:bookid', function(req, res, next) {
 router.get('/listchapters/:bookid/:order', function(req, res, next) {
 	var backurl = "/read/"+req.params.bookid;
 	req.session.forward = "/listchapters/"+req.params.bookid+"/"+req.params.order;
-	
+	var order = req.params.order;
 	Bookmodel.findOne({_id: req.params.bookid})
 	.populate('articles')
 	.exec(function(err, book){
@@ -206,7 +245,7 @@ router.get('/listchapters/:bookid/:order', function(req, res, next) {
 		else{
 			fontsize = req.session.fontsize ? req.session.fontsize : "15px";
 			var chapterindex=[], chapterallnames = [], chapterupdatetimes = [];
-			if (req.params.order==0){
+			if (order==0){
 				for (var i=0;i<book.articles.length;i++){
 					if (book.articles[i].mode == "published"){
 						chapterindex.push(i);
@@ -229,7 +268,7 @@ router.get('/listchapters/:bookid/:order', function(req, res, next) {
 				}				
 			}
 			var user = req.session && req.session.user ? req.session.user : null;
-			res.render('listchapters',{order: 1-req.params.order, book: book, allarticles: book.articles, chapterindex: chapterindex, 
+			res.render('listchapters',{order: 1-order, book: book, allarticles: book.articles, chapterindex: chapterindex, 
 				chapterallnames: chapterallnames, user: user, backurl: backurl,
 				chapterupdatetimes: chapterupdatetimes, fontsize: fontsize});
 		}
@@ -345,6 +384,9 @@ router.get('/read/:bookid', function(req, res, next) {
 
 router.get('/readarticle/:bookid/:chapter/:fontsize', function(req, res, next) {
 	req.session.fontsize = req.params.fontsize;
+	
+	var paramschapter = req.params.chapter;
+	var bookid = req.params.bookid;
 
 	//update viewhistory
 	if (req.session && req.session.user){
@@ -395,7 +437,7 @@ router.get('/readarticle/:bookid/:chapter/:fontsize', function(req, res, next) {
 		else{
 			console.log("read book:"+book);
 			var articles = book.articles;
-			var chapter = Math.min(req.params.chapter, articles.length-1);
+			var chapter = Math.min(paramschapter, articles.length-1);
 			if (articles.length > chapter && articles[chapter].mode == "published"){
 				
 				ArticleContentmodel.findOne({_id: articles[chapter].contentID}, function(err, articlecontent){
@@ -439,7 +481,7 @@ router.get('/readarticle/:bookid/:chapter/:fontsize', function(req, res, next) {
 			}
 			else{
 				console.log("沒有文章可以閱讀");
-				res.redirect('/read/'+req.params.bookid);
+				res.redirect('/read/'+bookid);
 			}
 		}
 	});	
@@ -499,9 +541,9 @@ router.post('/signin', function(req, res, next) {
 						//
 						console.log("req.session.user="+req.session.user);
 						if (req.session && req.session.forward){
-							var forward = req.session.forward;
-							req.session.forward = "/";
-							res.redirect(forward);
+							//var forward = req.session.forward;
+							//req.session.forward = "/";
+							res.redirect('/');
 						}
 						else{
 							res.redirect('/');

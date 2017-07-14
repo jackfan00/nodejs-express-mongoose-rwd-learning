@@ -14,14 +14,14 @@ block content
 	- var comments = book.comments;
 	div.container-fluid(style="padding-left:0px;padding-right:0px")
 		div(style="display: table; background-color: antiquewhite;width:100%")
-			div.col-xs-2(style="float: none;display: table-cell;vertical-align: middle;")
+			div.col-xs-2(style="float: none;display: table-cell;vertical-align: middle;padding: 7px;")
 				img.img-responsive(src= bookcoverimg )
-			div.col-xs-10(style="float: none;display: table-cell;vertical-align: middle;")
+			div.col-xs-10(style="float: none;display: table-cell;vertical-align: middle;padding: 10px;")
 				h5(style="margin-top:5px;margin-bottom:5px;") #{bookname}
 					span.badge.pull-right(style="margin-right:10px;") #{category}
 					span.badge.pull-right(style="margin-right:10px;") #{bookstatus}
-					// small 分類:#{category}
-					// small 狀態:#{bookstatus}
+					//- small 分類:#{category}
+					//- small 狀態:#{bookstatus}
 				h5(style="margin-top:5px;margin-bottom:5px;") 作者:#{authorname}
 				h6(style="margin-top:5px;margin-bottom:5px;") 更新:
 					span.text-primary(style="margin-left:10px;") #{publishedupdate_at}
@@ -56,11 +56,11 @@ block content
 			div.panel-heading 書評
 				span.pull-right(style="margin-left:10px;max-width:50%;overflow: hidden;max-height: 20px;") #{commentnum} 則評論 >
 
-	div.container-fluid(style="background-color:#eee; margin-bottom:1px")
+	div.container-fluid(style="background-color:#eef; margin-bottom:1px; padding:0px")
 		div(style="display: table;width:100%")
-			div.col-xs-2(style="float: none;display: table-cell;vertical-align: middle;background-color: #ddd;")
+			div.col-xs-2(style="float: none;display: table-cell;vertical-align: middle;padding: 7px;")
 				img(src="/images/user_photo_default.png" style="width:100%;")
-			div.col-xs-10(style="float: none;display: table-cell;vertical-align: middle;")
+			div.col-xs-10(style="float: none;display: table-cell;vertical-align: middle;padding: 10px;")
 				a(href="/readauthor/"+bookauthor._id)
 					h4 #{bookauthor.penname}
 						small(style="margin-left:10px") 作品 #{bookauthor.books.length} 部

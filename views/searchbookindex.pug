@@ -1,0 +1,45 @@
+extends layout
+
+block content
+	include ./menubar1
+	include ./menubar2
+			
+					
+	- for (var i=mybook_books.length-1; i>=0;i--){
+		- 	var category = cats[mybook_books[i].category];
+		- 	var bookname = mybook_books[i].name;
+		- 	var authorname = mybook_books[i].authorname;
+		- 	var ranking = mybook_books[i].allclicks;
+		- 	var bookcoverimg = mybook_books[i].coverimg;
+		- 	var bookstatus = mybook_books[i].status;
+		-	var ttt = Math.floor(mybook_books[i].bookwordcount/1000)/10;
+		- 	var bookwordcount = mybook_books[i].bookwordcount>10000 ? ttt+"萬" : mybook_books[i].bookwordcount;
+		- 	var bookdes = mybook_books[i].des;
+		- 	var bookid = mybook_books[i]._id;
+		-	var id = "click"+i;
+		-	var itemdes = "點擊";
+		// - var readchapterindex = mybooksreadstatus[i];
+		- var newestchapter = mybook_books[i].newestchapter.des;
+		// - var readstatus = "已讀最新章節";
+		// - if (readchapterindex < mybook_books[i].newestchapter.index){
+		// -	readstatus = (mybook_books[i].newestchapter.index-readchapterindex)+"章未讀";
+		// - }
+		- month = new Date().getMonth() - mybook_books[i].publishedupdate_at.getMonth();
+		- day = new Date().getDate() - mybook_books[i].publishedupdate_at.getDate();
+		- hour = new Date().getHours() - mybook_books[i].publishedupdate_at.getHours();
+		- minute = new Date().getMinutes() - mybook_books[i].publishedupdate_at.getMinutes();
+		- var timeby="1分鐘前";
+		- if (month!=0){
+		-	timeby = month+"月前";
+		- }
+		- else if (day !=0){
+		-	timeby = day+"天前";
+		- }
+		- else if (hour !=0){
+		-	timeby = hour+"小時前";
+		- }
+		- else if (minute !=0){
+		-	timeby = minute+"分鐘前";
+		- }
+		include ./searchbooklistitem
+	- }

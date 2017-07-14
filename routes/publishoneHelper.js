@@ -5,20 +5,24 @@ var Articlemodel = require('../models/article.js');
 var ArticleContentmodel = require('../models/articlecontent.js');
 
 
-var bookupdate = function(newestchapter, req, callback){
-				Bookmodel.update({ _id: req.params.bookid }, 
-				{ $set: { publishedupdate_at: new Date(), newestchapter: newestchapter}, $inc: {bookwordcount: req.params.wc}}, 
+var bookupdate = function(newestchapter, bookid, articleid, wc, callback){
+				Bookmodel.update({ _id: bookid }, 
+				{ $set: { publishedupdate_at: new Date(), newestchapter: newestchapter}, $inc: {bookwordcount: wc}}, 
 				function(err, raw){
 					if (err){
 						return callback(err);
 					}
-					console.log("publishonearticle:"+req.params.articleid);
+					console.log("publishonearticle:"+articleid);
 					callback(null, newestchapter);
 				});
 
 };
 var publishone = function(req, callback){
-	Articlemodel.findOneAndUpdate({ _id: req.params.articleid }, 
+	var articleid = req.params.articleid;
+	var bookid = req.params.bookid;
+	var wc = req.params.wc;
+	
+	Articlemodel.findOneAndUpdate({ _id: articleid }, 
 			
 			{ $set: { mode: "published"}}, 
 			
@@ -27,7 +31,7 @@ var publishone = function(req, callback){
 				//
 				newestchapter_des = "第 "+article.chapternumber+" 章  "+article.chaptername;
 				//
-				Bookmodel.findOne({ _id: req.params.bookid }, 
+				Bookmodel.findOne({ _id: bookid }, 
 				function(err, book){
 					if (err){
 						return callback(err);
@@ -35,13 +39,13 @@ var publishone = function(req, callback){
 					
 					found = -1;
 					for (var i=0; i<book.articles.length; i++){
-						if (book.articles[i] == req.params.articleid){
+						if (book.articles[i] == articleid){
 							found = i;
 							break;
 						}
 					}
 					newestchapter_index = found;
-					bookupdate({des:newestchapter_des, index: newestchapter_index}, req, callback);
+					bookupdate({des:newestchapter_des, index: newestchapter_index}, bookid, articleid, wc, callback);
 					
 				});
 				

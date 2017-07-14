@@ -17,17 +17,34 @@ var articleContentupdate = function(content, contentid, callback){
 		});
 
 };
+
+var findcontentid = function(content, articleid, callback){
+	Articlemodel.findOne({_id: articleid}, function(err, article){
+		if (err){
+			return callback(err);
+		}
+		articleContentupdate(content, article.contentID, callback );
+	});
+};
+
 var articleupdate = function(req, callback){
-	Articlemodel.update( { _id: req.body.editarticle }, 
-		{ $set: { chapternumber: req.body.chapternumber, chaptername: req.body.chaptername, chapterbooknumber: req.body.booknumber,
+	var content = req.body.content;
+	var editarticle = req.body.editarticle;
+	var chapternumber = req.body.chapternumber;
+	var chaptername = req.body.chaptername;
+	var booknumber = req.body.booknumber;
+	var wordcount = req.body.content.replace(/\s/g, "").length;
+	
+	Articlemodel.update( { _id: editarticle }, 
+		{ $set: { chapternumber: chapternumber, chaptername: chaptername, chapterbooknumber: booknumber,
 			//content: req.body.content, 
-			create_at: new Date(), wordcount: req.body.content.replace(/\s/g, "").length}}, 
+			create_at: new Date(), wordcount: wordcount}}, 
 		function(err,raw){
 			if (err){
 				return callback(err);
 			}
 			console.log("articleupdate success"+JSON.stringify(raw));
-			articleContentupdate(req.body.content, req.body.editarticle.contentID, callback );
+			findcontentid(content, editarticle, callback );
 		});
 
 };

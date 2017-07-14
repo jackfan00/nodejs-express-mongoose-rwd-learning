@@ -186,6 +186,8 @@ router.get('/deletebook/:bookid', function(req, res, next) {
 
 router.get('/article/:mode/:bookid/:articleid', function(req, res, next) {
 	if (req.session.authoruser){
+		var articleid = req.params.articleid;
+		var mode = req.params.mode;
 		Bookmodel
 		.findOne({ _id: req.params.bookid })
 		.populate('articles')
@@ -195,19 +197,21 @@ router.get('/article/:mode/:bookid/:articleid', function(req, res, next) {
 				res.send(err);
 			}
 			else if (book){
-				console.log("articleid :"+req.params.articleid);
 				
-				if (req.params.articleid && req.params.articleid.length>6){
+				
+				if (articleid && articleid.length>6){
+					console.log("articleid :"+articleid);
 					Articlemodel
-					.findOne({ _id: req.params.articleid })
+					.findOne({ _id: articleid })
 					.populate('contentID')
 					.exec(function(err, article){
-						res.render('forauthor/articleAll', {authorlogined: true, article: article, content: article.contentID.content, user: req.session.user, book: book, mode: req.params.mode });
+						res.render('forauthor/articleAll', {authorlogined: true, article: article, content: article.contentID.content, 
+						user: req.session.user, book: book, mode: mode });
 						
 					});
 				}
 				else{
-					res.render('forauthor/articleAll', {authorlogined: true, user: req.session.user, book: book, mode: req.params.mode });
+					res.render('forauthor/articleAll', {authorlogined: true, user: req.session.user, book: book, mode: mode });
 					
 				}
 				
@@ -224,7 +228,7 @@ router.get('/article/:mode/:bookid/:articleid', function(req, res, next) {
 		res.redirect('/author');
 	}
 });
-
+/* no use
 router.get('/publishedarticle/:bookid/:articleid', function(req, res, next) {
 	if (req.session.authoruser){
 		Bookmodel.findOne({ _id: req.params.bookid }, function(err, book){
@@ -247,8 +251,8 @@ router.get('/publishedarticle/:bookid/:articleid', function(req, res, next) {
 	else {
 		res.redirect('/author');
 	}	
-});
-
+});*/
+/* no use
 router.get('/deletedarticle/:bookid/:articleid', function(req, res, next) {
 	if (req.session.authoruser){
 		Bookmodel.findOne({ _id: req.params.bookid }, function(err, book){
@@ -271,11 +275,13 @@ router.get('/deletedarticle/:bookid/:articleid', function(req, res, next) {
 	else {
 		res.redirect('/author');
 	}		
-});
+});*/
 
 router.get('/editarticle/:mode/:articleID', function(req, res, next) {
 	if (req.session.authoruser){
-		Articlemodel.findOne({ _id: req.params.articleID })
+		var articleID = req.params.articleID;
+		var mode = req.params.mode;
+		Articlemodel.findOne({ _id: articleID })
 		//.populate('bookID')
 		.exec( function(err, article){
 			if (err){
@@ -286,7 +292,7 @@ router.get('/editarticle/:mode/:articleID', function(req, res, next) {
 				console.log("article book:"+article.bookID);
 				//req.session.article = req.params.articleID;
 				//res.render('forauthor/articleAll', {authorlogined: true, article: article, content: article.contentID.content user: req.session.user, book: article.bookID, mode: req.params.mode });		
-				res.redirect('/author/article/'+req.params.mode+'/'+article.bookID+'/'+req.params.articleID);
+				res.redirect('/author/article/'+mode+'/'+article.bookID+'/'+articleID);
 			}
 
 			else{
@@ -305,13 +311,16 @@ router.get('/editarticle/:mode/:articleID', function(req, res, next) {
 router.get('/recoverarticle/:articleid/:bookid', function(req, res, next) {
 	
 	if (req.session.authoruser){
-			Articlemodel.update({ _id: req.params.articleid }, 
+			var articleid = req.params.articleid;
+			var bookid = req.params.bookid;
+			
+			Articlemodel.update({ _id: articleid }, 
 			
 			{ $set: { mode: "writing"}}, 
 			
 			function(err, raw){
 				console.log("deletearticle:"+err);
-				res.redirect('/author/article/writing/'+req.params.bookid+'/1');
+				res.redirect('/author/article/writing/'+bookid+'/1');
 			});
 	}
 	else{
@@ -322,13 +331,15 @@ router.get('/recoverarticle/:articleid/:bookid', function(req, res, next) {
 router.get('/deletearticle/:mode/:articleid/:bookid', function(req, res, next) {
 	var mode = req.params.mode == "deleted" ? "deleteddeleted" : "deleted";
 	if (req.session.authoruser){
-			Articlemodel.update({ _id: req.params.articleid }, 
+			var articleid = req.params.articleid;
+			var bookid = req.params.bookid;
+			Articlemodel.update({ _id: articleid }, 
 			
 			{ $set: { mode: mode}}, 
 			
 			function(err, raw){
 				console.log("deletearticle:"+err);
-				res.redirect('/author/article/deleted/'+req.params.bookid+'/1');
+				res.redirect('/author/article/deleted/'+bookid+'/1');
 			});
 	}
 	else{
@@ -338,14 +349,16 @@ router.get('/deletearticle/:mode/:articleid/:bookid', function(req, res, next) {
 
 router.get('/publishonearticle/:articleid/:bookid/:wc', function(req, res, next) {
 	if (req.session.authoruser){
+			var articleid = req.params.articleid;
+			var bookid = req.params.bookid;
 			publishoneHelper(req, function(err, raw){
 				if (err){
 					console.log("publishone err");
 					res.send(err);
 				}
 				else{
-					console.log("publishonearticle:"+req.params.articleid);
-					res.redirect('/author/article/published/'+req.params.bookid+'/1');
+					console.log("publishonearticle:"+articleid);
+					res.redirect('/author/article/published/'+bookid+'/1');
 				}
 			});
 	}
@@ -356,14 +369,15 @@ router.get('/publishonearticle/:articleid/:bookid/:wc', function(req, res, next)
 
 router.get('/publishAllarticle/:bookid', function(req, res, next) {
 	if (req.session.authoruser){
+		var bookid = req.params.bookid;
 		publishallHelper(req, function(err, raw){
 				if (err){
 					console.log("publishall err");
 					res.send(err);
 				}
 				else{
-					console.log("publishallarticle:"+req.params.bookid);
-					res.redirect('/author/article/published/'+req.params.bookid+'/1');
+					console.log("publishallarticle:"+bookid);
+					res.redirect('/author/article/published/'+bookid+'/1');
 				}
 			});
 		/*
@@ -672,7 +686,7 @@ router.post('/editbook', function(req, res, next) {
 
 router.post('/savenewarticle/:mode', function(req, res, next) {
 	if (req.session.authoruser){	
-
+		var book_id = req.body.book_id;
 
 		if (req.body.editarticle) {  //edit article
 		
@@ -682,7 +696,7 @@ router.post('/savenewarticle/:mode', function(req, res, next) {
 						res.send(err);
 				}
 				else{
-					res.redirect('/author/article/writing/'+req.body.book_id+"/1");
+					res.redirect('/author/article/writing/'+book_id+"/1");
 				}
 			});
 		

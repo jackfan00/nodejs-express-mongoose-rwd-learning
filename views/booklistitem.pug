@@ -6,7 +6,7 @@ div.panel.panel-default(style="margin-bottom: 0px;")
 				div.col-xs-7(style="float: none;display: table-cell;vertical-align: middle;padding:0px;")
 					h4.panel-title(style="overflow:hidden;max-height:17px") #{bookname}
 						
-				// div.col-xs-4(style="float: none;display: table-cell;vertical-align: middle;")
+				//- div.col-xs-4(style="float: none;display: table-cell;vertical-align: middle;")
 					h4.panel-title.pull-right #{bookwordcount}字
 				div.col-xs-5(style="float: none;display: table-cell;vertical-align: middle;padding:0px")
 					div(style="display: table;width: 100%;")
@@ -20,15 +20,15 @@ div.panel.panel-default(style="margin-bottom: 0px;")
 	div.container-fluid(id="collapse"+id class="panel-collapse collapse" style="background-color:#eee;padding:0px")
 		a(href="/read/"+bookid)
 			div(style="display: table;width:100%")
-				div.col-xs-2(style="float: none;display: table-cell;vertical-align: middle;background-color: darkgray;padding: 7px;")
+				div.col-xs-2(style="float: none;display: table-cell;vertical-align: middle;padding: 7px;")
 					img.img-responsive(src= bookcoverimg style="width:100%;")
 				div.col-xs-10(style="float: none;display: table-cell;vertical-align: middle;padding: 10px;")
 					h5(style="margin:0px") #{bookname}
 						span.badge.pull-right(style="margin-right:10px;") #{category}
 						span.badge.pull-right(style="margin-right:10px;") #{bookstatus}
-						// span.badge.pull-right(style="margin-right:10px;") #{bookwordcount}字
-					blockquote.blockquote-reverse(style="margin: 0 0 0px;border-right: 0px;padding:0px")
-						h6.text-muted(style="white-space: pre-wrap;max-height:25px;overflow:hidden;margin-top: 5px;margin-bottom: 5px;") #{bookdes}
-						footer(style="font-size:70%;color:#000") #{authorname}
+						//- span.badge.pull-right(style="margin-right:10px;") #{bookwordcount}字
+					//- p(style="margin: 0 0 0px;border-right: 0px;padding:0px")
+					h6.text-muted(style="white-space: pre-wrap;max-height:25px;overflow:hidden;margin-top: 5px;margin-bottom: 5px;") #{bookdes}
+					p(style="margin: 0 0 0px;font-size:70%;color:#000") #{authorname}
 	
 	

@@ -31,26 +31,32 @@ var articleContentupdate = function(contentid, bookid, articleid, callback){
 
 };
 
-var articleSave = function(req, contentid, callback){
+var articleSave = function(chapterbooknumber,chapternumber,chaptername,bookID,wordcount, contentid, callback){
 	var newArticle = new Articlemodel();
-	newArticle.chapterbooknumber = req.body.booknumber;
-	newArticle.chapternumber = req.body.chapternumber;
-	newArticle.chaptername = req.body.chaptername;
-	newArticle.bookID = req.body.book_id;
+	newArticle.chapterbooknumber = chapterbooknumber;
+	newArticle.chapternumber = chapternumber;
+	newArticle.chaptername = chaptername;
+	newArticle.bookID = bookID;
 	newArticle.contentID = contentid;
-	newArticle.wordcount = req.body.content.replace(/\s/g, "").length;
+	newArticle.wordcount = wordcount;
 	newArticle.mode = "writing";
 	newArticle.save(function (err, article) {
 		if (err){
 			return callback(err);
 		}
 		console.log("articleSave success:"+article);
-		articleContentupdate(contentid, req.body.book_id, article._id, callback);
+		articleContentupdate(contentid, article.bookID, article._id, callback);
 	});
 
 };
 
 var articleContentSave = function(req, callback){
+	chapterbooknumber = req.body.booknumber;
+	chapternumber = req.body.chapternumber;
+	chaptername = req.body.chaptername;
+	bookID = req.body.book_id;
+	wordcount = req.body.content.replace(/\s/g, "").length;
+//
 	var newArticleContent = new ArticleContentmodel();
 	newArticleContent.content = req.body.content;
 	newArticleContent.save( function(err,arcont){
@@ -58,7 +64,7 @@ var articleContentSave = function(req, callback){
 			return callback(err);
 		}
 		console.log("articleContentSave success");
-		articleSave(req, arcont._id, callback);
+		articleSave(chapterbooknumber,chapternumber,chaptername,bookID,wordcount, arcont._id, callback);
 	});
 
 };

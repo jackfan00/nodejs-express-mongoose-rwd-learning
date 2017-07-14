@@ -1,0 +1,16 @@
+
+div.container-fluid(style="background-color:#eee;padding:0px;margin-bottom:1px;margin-top:1px")
+	a(href="/read/"+bookid)
+		div(style="display: table;width:100%")
+			div.col-xs-2(style="float: none;display: table-cell;vertical-align: middle;padding: 7px;")
+				img.img-responsive(src= bookcoverimg style="width:100%;")
+			div.col-xs-10(style="float: none;display: table-cell;vertical-align: middle;padding: 10px;")
+				h5(style="margin:0px") #{bookname}
+				p(style="margin: 0 0 0px;border-right: 0px;padding:0px")
+					h6.text-muted(style="white-space: pre-wrap;max-height:25px;overflow:hidden;margin-top: 5px;margin-bottom: 5px;") #{bookdes}
+				p(style="font-size:70%;color:#000") #{authorname}
+					span.badge(style="margin-left:5px;color: red;border-radius: 7px;border-color: red;border-style: double;background-color: transparent;") #{category}
+					span.badge(style="margin-left:5px;color: red;border-radius: 7px;border-color: red;border-style: double;background-color: transparent;") #{bookstatus}
+					span.badge(style="margin-left:5px;color: red;border-radius: 7px;border-color: red;border-style: double;background-color: transparent;") #{bookwordcount}字
+	
+	
