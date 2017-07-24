@@ -1,0 +1,1 @@
+set DEBUG=myrwdapp:* & npm start
